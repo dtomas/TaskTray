@@ -3,15 +3,17 @@
 PROJECT = "TaskTray"
 SITE = "rox4debian.berlios.de"
 
-import findrox; findrox.version(1, 9, 6)
-import rox, os
-
-__builtins__._ = rox.i18n.translation(os.path.join(rox.app_dir, 'Messages'))
-
-import sys
+import sys, os
 sys.path.append(os.path.dirname(__file__))
 sys.path.append(os.path.join(os.path.dirname(__file__), 'TrayLib'))
+sys.path.append(
+    os.path.join(os.path.dirname(__file__), 'rox-lib', 'ROX-Lib2', 'python')
+)
+
+import rox
 from tasktray.main import TaskTrayMain
+
+__builtins__._ = rox.i18n.translation(os.path.join(rox.app_dir, 'Messages'))
 
 rox.setup_app_options(PROJECT, 'Options.xml', SITE)
 
