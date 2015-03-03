@@ -1,0 +1,28 @@
+<?xml version='1.0'?>
+<options>
+  <section>
+    <frame label='Behaviour'>
+      <toggle name='all_workspaces' label='Show all workspaces'/>
+      <toggle name='arrow' label='Show arrow for applications with more than one open window'/>
+    </frame>
+    <hbox>
+      <frame label='Separators'>
+        <toggle name='separator_left' label='Left'/>
+        <toggle name='separator_right' label='Right'/>
+      </frame>
+      <frame label='Main Menu'>
+        <radio-group name='menus'>
+  	      <radio label='Left' value='1'/>
+          <radio label='Right' value='2'/>
+        </radio-group>
+      </frame>
+    </hbox>
+    <frame label='Size'>
+      <numentry name='icon_size_max' label='Maximum icon size:' min='16' max='96' step='8'/>
+    </frame>
+    <frame label='Appearance'>
+      <toggle name='themed_icons' label='Use themed icons if possible'/>
+      <toggle name='effects' label='Enable visual effects'/>
+    </frame>
+  </section>
+</options>

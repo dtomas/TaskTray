@@ -1,0 +1,3 @@
+[submodule "TrayLib"]
+	path = TrayLib
+	url = http://github.com/dtomas/TrayLib

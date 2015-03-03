@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<AppInfo>
+  <Summary>Shows open windows</Summary>
+  <About>
+    <Purpose>Shows open windows</Purpose>
+    <Version>0.7.1</Version>
+    <Author>Dennis Tomas &lt;den.t@gmx.de&gt;</Author>
+    <Homepage>http://github.com/dtomas/TaskTray</Homepage>
+  </About>
+</AppInfo>

@@ -1,0 +1,213 @@
+			TaskTray
+			Shows open windows
+			by Dennis Tomas
+
+0.7.1
+~~~~~
+Set client type "pager" to make raising windows in metacity possible. (Tony Houghton) 
+When a window is closed, update its app's icon.
+Now depending on TrayLib >= 0.4.
+
+0.7
+~~~
+Now depending on TrayLib >= 0.3.
+Replaced menu boxes with a menu icon.
+Clicking on menu icon shows desktop/windows.
+When desktop is shown, hide all icons to avoid accidentally minimizing all windows.
+Scrolling menu icon toggles "show all workspaces" option.
+Show all options on one page.
+
+0.6.5
+~~~~~
+Remove icon from AppIconConfig object when destroyed to avoid accumulating garbage.
+Restructured options dialog.
+
+0.6.4
+~~~~~
+Allow dragging an icon to a different workspace on the pager.
+
+0.6.3
+~~~~~
+Use the icon of the currently active window for a class group's icon.
+
+0.6.2
+~~~~~
+Added local 0install-feed.
+Only use an AppIcon's icon for menu when it's a themed icon.
+Add third argument to __active_workspace_changed() and __active_window_changed(). (reported by Tony Houghton)
+
+0.6.1
+~~~~~
+Added option for maximum icon size.
+Added option to get icons from icon theme if possible.
+Moved Applet and Window classes into TrayLib.
+Indicate window state in tooltip.
+
+0.6
+~~~
+Rewrote nearly everything.
+Moved the bulk of the code into TrayLib.
+Adjust to panel size.
+Kill processes more aggressively (using -KILL).
+Option to disable visual effects.
+Russian translation. (Konstantin Korikov)
+Only show "Close subdirectories" menu entry for filer windows showing a directory.
+Enlarge icon of active window even if active window should skip tasklist.
+Only check if a window should be shown when it's opened or changed (speedup). 
+Ignore empty path in APPDIRPATH.
+Only look for appdir if name of class-group isn't empty.
+Option to disable visual effects.
+
+0.5.3
+~~~~~
+Cope with windows that stay active even if minimized.
+Make arrow for main menu optional. (suggested by Rüdiger Otte)
+Make arrow on icons optional. (suggested by Will)
+Option to close subdirectories of filer windows.
+Removed move_others option, because it does not work with arrows.
+Changed default options to not include separators.
+If no .DirIcon is present in ~, use 'user-home' icon.
+Fixed bug: Don't add app options to a cached menu.
+Fixed bug: Show app options even if there's only one window.
+
+0.5.2
+~~~~~
+When scaling an icon, keep its ratio.
+Don't show menu for 0 entries.
+Show number of windows in "Close all" dialog.
+Show an arrow on icons that have more than one windows.
+Show arrow in MenuBox.
+Cache menus for faster access.
+Don't grey out "Activate" for the active window, to be able to bring it to front.
+Mark menu entry for attention-demanding windows in winmenu with !!! <title> !!!.
+Blink icon if a window demands the user's attention. (suggested by SamuelDr)
+Different Options.xml files for horizontal/vertical panel.
+
+0.5.1
+~~~~~
+Stop panel from growing more than necessary. (reported by Will) 
+Leave a border of 2 pixels around the tasktray.
+Added missing line to options_changed().
+Don't update size when "themed icons" or "all workspaces" option has changed.
+Don't show/hide icon when size option has changed.
+
+0.5
+~~~
+Set size request for tasktray, to avoid growing/shrinking panel.
+Option to show a menu box left, right or both.
+If a "skip tasklist" window becomes active, zoom in its icon, if there is one.
+Use themed icon if the application's icon is a fallback icon.
+Use the application's icon, not the class group's.
+Only show menu when button 3 pressed, to avoid opening it accidentally.
+If a window not to be shown becomes the active window, set the active icon to None.
+Check if AppInfo.xml exists before loading app options.
+If icon of name 'foo-bar' is not found, use 'foo'. (think firefox-bin or gimp-2.2)
+When trying to find an app dir foo, also try Foo and FOO. 
+Add 'Help' to app options if help dir exists.
+Added 'Help' and 'About' to main menu. 
+Show all menu entries in winmenu with size 22 (except active window).
+Show icons of options in winmenu. (Requires patched ROX-Lib)
+Escape '_' in WindowMenuItem.
+Don't let a window change its icon to a fallback icon.
+Use gtk stock items for winmenu.
+Use different wording (similar to xfce).
+Sped up winmenu by only loading the themed 'directory' icon once.
+Removed options from winmenu: move, resize, on top, move to ws left/right/up/down.  
+Added options to winmenu: activate, force quit, shade/unshade.
+Rewrote README.
+Added locations of libwnck and gnome-python-desktop to README. (suggested by Keith W)
+
+0.4.2.1
+~~~~~~~
+Call rox.app_options.notify() before using any of the options. (reported by Thomas Leonard) 
+
+0.4.2
+~~~~~
+Optionally use ROX-Filer's icon theme instead of the GTK theme.
+Also support 'folder' and 'gnome-fs-directory' as icons for directories.
+Handle exception when themed icon for directory isn't present. (reported by Delcides)
+When setting the size of an icon, take into account the previous pointer motion.
+When windows change state, zoom icon smoothly to the new size. (Jim Ramsay)
+Push other icons away when icon is being hidden/destroyed. (Jim Ramsay)
+Make other icons collapse around an icon that's being hidden/destroyed. (Jim Ramsay)
+"move_others" option that never allocates the maximum icon size. (Jim Ramsay)
+
+0.4.1
+~~~~~
+Stop the window index from going out of bounds when browsing. (reported by grim)
+Show smaller icon if an icon has only minimized windows.
+Make "Minimize All" insensitive if there are only minimized windows.
+Update the active icon if None becomes the active window. (reported by grim)
+If "all workspaces" is set, don't hide an icon with no windows on active workspace.
+Show the correct version number in AppInfo.xml. ;-)
+
+0.4
+~~~
+Cleaned up and commented large parts of the code.
+Zoom in the icon of the currently active window.
+Optionally zoom in the icon under the pointer.
+Using separators again, in order to be able to just hit the edge.
+In window menu, make windows activate/shade on wheel up, minimize on wheel down.
+Browse windows with mouse wheel or buttons 4/5.
+Show smaller icon for minimized windows.
+
+0.3.9
+~~~~~
+When adding/removing frame, don't show icons that should be hidden.
+When activating a window, activate its workspace if different from current.
+Changed style of frame to plain.
+
+0.3.8
+~~~~~
+Make frame optional. (suggested by grim)
+Add second menu box to the right edge. (suggested by grim)
+Show app menu in right-click menu. (suggested by grim)
+Fixed error when ROX hasn't been started before running TaskTray. (Jim Ramsay)
+
+0.3.7
+~~~~~
+Use frame instead of separators.
+Optionally use themed icon (name: name of classgroup in lower case, ' ' replaced with '-').
+Option for changing the size.
+
+0.3.6
+~~~~~
+Option for showing all workspaces (suggested by Delcides)
+
+0.3.5
+~~~~~
+Don't traverse through windows marked to skip tasklist
+Show the tasktray vertically on vertical panels
+Allow it to be run as application (in window)
+
+0.3.4
+~~~~~
+german i18n
+don't minimize windows that are marked to skip tasklist
+only minimize windows on the current workspace
+
+0.3.3
+~~~~~
+Show "= <title> =" for shaded windows
+Show state for minimized/shaded in the tooltip
+React to state changes with updating the tooltip
+
+0.3.2
+~~~~~
+Show correct tooltip (take into account that not all windows are on the same workspace)
+Fixed bug when closing all windows (reported by Peter Hyman)
+
+0.3
+~~~
+"close all", "minimize all" and "restore all" menu entries (suggested by Peter Hyman)
+
+0.2
+~~~
+Make window minimized when clicking on its menu-entry and it is activated
+Show minimized windows as [<window-name>]
+Save space by removing the "Tasks" label
+Update icons when adding/removing windows
+
+0.1
+~~~
+Initial release.

@@ -1,0 +1,111 @@
+# TaskTray Applet
+# Copyright (C) 2006 Dennis Tomas
+# This file is distributed under the same license as the TaskTray package.
+# Dennis Tomas <dtomas@users.berlios.de>, 2006.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: TaskTray 0.6\n"
+"POT-Creation-Date: 2008-03-01 08:28+CET\n"
+"PO-Revision-Date: 2007-07-02 20:04+EEST\n"
+"Last-Translator: Konstantin Korikov <lostclus@ua.fm>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+#: AppRun:21
+msgid ""
+"%s needs TrayLib version 0.3 or greater. You can download it from ftp://ftp."
+"berlios.de/pub/rox4debian/libs."
+msgstr ""
+
+#: findlib.py:27
+msgid ""
+"%s needs %s to run. Please download it from %s and put it into one of the "
+"following locations:\n"
+"\n"
+msgstr ""
+
+#: main_icon.py:51
+msgid "Click to show windows.\n"
+msgstr ""
+
+#: main_icon.py:53
+msgid "Click to show the desktop.\n"
+msgstr ""
+
+#: main_icon.py:55
+msgid "Scroll down to only show windows of this workspace."
+msgstr ""
+
+#: main_icon.py:57
+#, fuzzy
+msgid "Scroll up to show windows of all workspaces."
+msgstr "Показывать все рабочие места"
+
+#: tipsH:1 tipsV:1
+msgid "Behaviour"
+msgstr "Поведение"
+
+#: tipsH:2 tipsV:2
+msgid "Show all workspaces"
+msgstr "Показывать все рабочие места"
+
+#: tipsH:3 tipsV:3
+msgid "Show arrow for applications with more than one open window"
+msgstr "Отображать стрелку для приложений с множеством открытых окон"
+
+#: tipsH:4 tipsV:4
+msgid "Separators"
+msgstr "Разделители"
+
+#: tipsH:5 tipsH:8
+msgid "Left"
+msgstr "Слева"
+
+#: tipsH:6 tipsH:9
+msgid "Right"
+msgstr "Справа"
+
+#: tipsH:7 tipsV:7
+msgid "Main Menu"
+msgstr "Главное меню"
+
+#: tipsH:10 tipsV:10
+msgid "Size"
+msgstr ""
+
+#: tipsH:11 tipsV:11
+msgid "Maximum icon size:"
+msgstr ""
+
+#: tipsH:12 tipsV:12
+msgid "Appearance"
+msgstr ""
+
+#: tipsH:13 tipsV:13
+msgid "Use themed icons if possible"
+msgstr ""
+
+#: tipsH:14 tipsV:14
+msgid "Enable visual effects"
+msgstr ""
+
+#: tipsV:5 tipsV:8
+msgid "Top"
+msgstr "Вверху"
+
+#: tipsV:6 tipsV:9
+msgid "Bottom"
+msgstr "Внизу"
+
+#~ msgid "Left and right"
+#~ msgstr "Слева и справа"
+
+#~ msgid "Show arrow for main menu"
+#~ msgstr "Отображать стрелку для главного меню"
+
+#~ msgid "Top and bottom"
+#~ msgstr "Вверху и внизу"
