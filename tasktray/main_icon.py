@@ -10,7 +10,8 @@ class MainIcon(MenuIcon):
 
     def __init__(self, tray, icon_config, tray_config):
         MenuIcon.__init__(self, tray, icon_config, tray_config)
-        SCREEN.connect("showing-desktop-changed", self.__showing_desktop_changed)
+        SCREEN.connect("showing-desktop-changed",
+                       self.__showing_desktop_changed)
         tray.win_config.add_configurable(self)
 
     def __showing_desktop_changed(self, screen):

@@ -31,7 +31,8 @@ class TaskTrayMain(Main):
 
         self.__appicon_config = AppIconConfig(self.__o_themed_icons.int_value)
         
-        # TaskTray doesn't use the 'hidden' option, so make sure no icons get hidden.
+        # TaskTray doesn't use the 'hidden' option, so make sure no icons get
+        # hidden.
         self.icon_config.hidden = False
         
     def mainloop(self, app_args):

@@ -11,7 +11,9 @@ class AppIconConfig(Config):
             from the current icon theme.
         """
         Config.__init__(self)
-        self.add_attribute('themed_icons', themed_icons, 'update_option_themed_icons')
+        self.add_attribute('themed_icons', themed_icons,
+                           'update_option_themed_icons')
     
     themed_icons = property(lambda self : self.get_attribute('themed_icons'),
-            lambda self, themed_icons : self.set_attribute('themed_icons', themed_icons))
+            lambda self, themed_icons : self.set_attribute('themed_icons',
+                                                           themed_icons))

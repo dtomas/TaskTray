@@ -26,7 +26,8 @@ class AppIcon(WinIcon):
                     continue
                 app_dir = os.path.join(path, dirname)
                 if not os.path.isdir(app_dir):
-                    app_dir = os.path.join(path, dirname[0].upper() + dirname[1:])
+                    app_dir = os.path.join(path,
+                                           dirname[0].upper() + dirname[1:])
                 if not os.path.isdir(app_dir):
                     app_dir = os.path.join(path, dirname.upper())
                 if rox.isappdir(app_dir):
@@ -36,7 +37,8 @@ class AppIcon(WinIcon):
                         self.__help_dir = help_dir
                     app_info = os.path.join(app_dir, 'AppInfo.xml')
                     if os.access(app_info, os.R_OK):
-                        self.__app_options = AppInfo.AppInfo(app_info).getAppMenu()
+                        self.__app_options = (
+                            AppInfo.AppInfo(app_info).getAppMenu())
                         break
             if not self.__help_dir:
                 for datadir in XDG_DATA_DIRS:
@@ -56,7 +58,8 @@ class AppIcon(WinIcon):
         self.connect("drag-data-get", self.__drag_data_get)
         
         self.connect("destroy", self.__destroy)
-        SCREEN.connect("showing-desktop-changed", self.__showing_desktop_changed)
+        SCREEN.connect("showing-desktop-changed",
+                       self.__showing_desktop_changed)
         
     def __showing_desktop_changed(self, screen):
         self.update_visibility()
@@ -95,7 +98,8 @@ class AppIcon(WinIcon):
             item.connect("activate", self.__show_help)
         for option in self.__app_options:
             item = gtk.ImageMenuItem(option.get('label'))
-            item.connect("activate", self.__run_with_option, option.get('option'))
+            item.connect("activate", self.__run_with_option,
+                         option.get('option'))
             stock_id = option.get('icon')
             if stock_id:
                 item.get_image().set_from_stock(stock_id, gtk.ICON_SIZE_MENU)
@@ -140,7 +144,8 @@ class AppIcon(WinIcon):
                             len(visible_windows))
 
     def make_visibility(self):
-        return not SCREEN.get_showing_desktop() and WinIcon.make_visibility(self)
+        return (
+            not SCREEN.get_showing_desktop() and WinIcon.make_visibility(self))
 
 
     # Methods from AppIconConfigurable
