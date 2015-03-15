@@ -4,6 +4,7 @@
 
 0.7.2
 ~~~~~
+Added install script for XFCE (install_xfce.py).
 Now including TrayLib 0.4.1. See TrayLib/Help/Changes.
 
 0.7.1
