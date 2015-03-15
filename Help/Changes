@@ -2,6 +2,10 @@
 			Shows open windows
 			by Dennis Tomas
 
+0.7.2
+~~~~~
+Now including TrayLib 0.4.1. See TrayLib/Help/Changes.
+
 0.7.1
 ~~~~~
 Set client type "pager" to make raising windows in metacity possible. (Tony Houghton) 
