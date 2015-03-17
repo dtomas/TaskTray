@@ -2,6 +2,10 @@
 			Shows open windows
 			by Dennis Tomas
 
+0.7.3 (unreleased)
+~~~~~
+Now including TrayLib 0.4.2. See TrayLib/Help/Changes.
+
 0.7.2
 ~~~~~
 Added install script for XFCE (install_xfce.py).
