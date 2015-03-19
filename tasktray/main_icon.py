@@ -16,8 +16,14 @@ class MainIcon(MenuIcon):
         self.update_icon()
         self.update_tooltip()
 
+
+    # Methods called when WinIconConfig has changed.
+
     def update_option_all_workspaces(self):
         self.update_tooltip()
+
+
+    # Methods inherited from Icon.
 
     def click(self, time):
         self.__screen.toggle_showing_desktop(

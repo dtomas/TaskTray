@@ -86,9 +86,15 @@ class AppIcon(WinIcon):
         self.update_tooltip()
         self.update_icon()
 
+
+    # Methods from WinIcon.
+
     def window_is_visible(self, window):
         return (WinIcon.window_is_visible(self, window) 
             and window.get_class_group() == self.__class_group)
+
+
+    # Methods from Icon.
 
     def get_menu_right(self):
         menu = WinIcon.get_menu_right(self)
@@ -157,7 +163,7 @@ class AppIcon(WinIcon):
         )
 
 
-    # Methods from AppIconConfigurable
+    # Methods called when AppIconConfig has changed.
 
     def update_option_themed_icons(self):
         self.update_icon()
