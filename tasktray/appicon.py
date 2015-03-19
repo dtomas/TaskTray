@@ -1,14 +1,21 @@
-import sys, os, gtk, gobject, struct
-from rox import processes, AppInfo, filer
+import os
+import struct
 
-from traylib import *
+import gtk
+
+import rox
+from rox import processes, AppInfo, filer
+from rox.basedir import xdg_data_dirs
+
+from traylib import APPDIRPATH, TARGET_WNCK_WINDOW_ID
 from traylib.winicon import WinIcon
 
 
 class AppIcon(WinIcon):
 
-    def __init__(self, icon_config, win_config, appicon_config, class_group):
-        WinIcon.__init__(self, icon_config, win_config)
+    def __init__(self, icon_config, win_config, appicon_config, class_group,
+                 screen):
+        WinIcon.__init__(self, icon_config, win_config, screen)
 
         self.__appicon_config = appicon_config
         appicon_config.add_configurable(self)
@@ -41,7 +48,7 @@ class AppIcon(WinIcon):
                             AppInfo.AppInfo(app_info).getAppMenu())
                         break
             if not self.__help_dir:
-                for datadir in XDG_DATA_DIRS:
+                for datadir in xdg_data_dirs:
                     help_dir = os.path.join(datadir, 'doc', dirname.lower())
                     if os.path.isdir(help_dir):
                         self.__help_dir = help_dir
@@ -58,7 +65,7 @@ class AppIcon(WinIcon):
         self.connect("drag-data-get", self.__drag_data_get)
         
         self.connect("destroy", self.__destroy)
-        SCREEN.connect("showing-desktop-changed",
+        self.screen.connect("showing-desktop-changed",
                        self.__showing_desktop_changed)
         
     def __showing_desktop_changed(self, screen):
@@ -145,7 +152,9 @@ class AppIcon(WinIcon):
 
     def make_visibility(self):
         return (
-            not SCREEN.get_showing_desktop() and WinIcon.make_visibility(self))
+            not self.screen.get_showing_desktop() and
+            WinIcon.make_visibility(self)
+        )
 
 
     # Methods from AppIconConfigurable

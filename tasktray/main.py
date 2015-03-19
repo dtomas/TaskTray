@@ -1,6 +1,7 @@
 import rox
 from rox.options import Option
 
+from traylib import ICON_THEME
 from traylib.main import Main
 from traylib.winicon import WinIconConfig
 
@@ -18,6 +19,8 @@ class TaskTrayMain(Main):
             wnck.set_client_type(wnck.CLIENT_TYPE_PAGER)
         except:
             pass
+        self.__screen = wnck.screen_get_default()
+        self.__screen.force_update()
 
     def init_options(self):
         Main.init_options(self)
@@ -41,11 +44,8 @@ class TaskTrayMain(Main):
         self.icon_config.hidden = False
         
     def mainloop(self, app_args):
-        Main.mainloop(self, 
-                      app_args, 
-                      TaskTray, 
-                      self.__win_config, 
-                      self.__appicon_config)
+        Main.mainloop(self, app_args, TaskTray, self.__win_config, 
+                      self.__appicon_config, self.__screen)
 
     def options_changed(self):
         if self.__o_arrow.has_changed:

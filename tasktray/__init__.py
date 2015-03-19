@@ -1,6 +1,3 @@
-import sys, os, rox
-
-from traylib import *
 from traylib.tray import Tray, TrayConfig
 from traylib.icon import IconConfig
 
@@ -10,25 +7,30 @@ from tasktray.main_icon import MainIcon
 
 class TaskTray(Tray):
 
-    def __init__(self, icon_config, tray_config, win_config, appicon_config):
+    def __init__(self, icon_config, tray_config, win_config, appicon_config,
+                 screen):
         self.__win_config = win_config
         self.__appicon_config = appicon_config
+        self.__screen = screen
         self.__class_groups = {}
         self.__active_icon = None
 
-        Tray.__init__(self, icon_config, tray_config, MainIcon)
+        Tray.__init__(self, icon_config, tray_config, MainIcon,
+                      win_config, screen)
 
         self.add_box(None)
 
-        SCREEN.connect("window-opened", self.__window_opened)
-        SCREEN.connect("window-closed", self.__window_closed)
-        SCREEN.connect("active-window-changed", self.__active_window_changed)
-        SCREEN.connect("active-workspace-changed", 
+        screen.connect("window-opened", self.__window_opened)
+        screen.connect("window-closed", self.__window_closed)
+        screen.connect(
+            "active-window-changed", self.__active_window_changed
+        )
+        screen.connect("active-workspace-changed", 
                         self.__active_workspace_changed)
 
-        for window in SCREEN.get_windows():
-            self.__window_opened(SCREEN, window)
-        self.__active_window_changed(SCREEN)
+        for window in screen.get_windows():
+            self.__window_opened(screen, window)
+        self.__active_window_changed(screen)
 
     def __active_window_changed(self, screen, window = None):
         if self.__active_icon:
@@ -55,9 +57,10 @@ class TaskTray(Tray):
         icon = self.get_icon(class_group)
         if not icon:
             icon = AppIcon(self.icon_config, 
-                            self.__win_config,
-                            self.__appicon_config,
-                            class_group)
+                           self.__win_config,
+                           self.__appicon_config,
+                           class_group,
+                           self.__screen)
             icon.update_name()
             icon.update_icon()
             self.add_icon(None, class_group, icon)
@@ -79,3 +82,4 @@ class TaskTray(Tray):
 
     win_config = property(lambda self : self.__win_config)
     appicon_config = property(lambda self : self.__appicon_config)
+    screen = property(lambda self : self.__screen)
