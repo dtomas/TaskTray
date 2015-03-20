@@ -1,3 +1,5 @@
+from functools import partial
+
 import rox
 from rox.options import Option
 
@@ -44,8 +46,15 @@ class TaskTrayMain(Main):
         self.icon_config.hidden = False
         
     def mainloop(self, app_args):
-        Main.mainloop(self, app_args, TaskTray, self.__win_config, 
-                      self.__appicon_config, self.__screen)
+        Main.mainloop(
+            self, app_args,
+            partial(
+                TaskTray,
+                win_config=self.__win_config,
+                appicon_config=self.__appicon_config,
+                screen=self.__screen,
+            )
+        )
 
     def options_changed(self):
         if self.__o_arrow.has_changed:
