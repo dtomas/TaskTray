@@ -30,17 +30,21 @@ def manage_appicons(tray, screen, icon_config, win_config, appicon_config):
                 icon.update_icon()
         del class_groups[window]
 
-    window_opened_handler = screen.connect("window-opened", window_opened)
-    window_closed_handler = screen.connect("window-closed", window_closed)
+    class handlers:
+        pass
 
     def manage():
+        handlers.window_opened_handler = screen.connect("window-opened",
+                                                        window_opened)
+        handlers.window_closed_handler = screen.connect("window-closed",
+                                                        window_closed)
         for window in screen.get_windows():
             window_opened(screen, window)
             yield None
 
     def unmanage():
-        screen.disconnect(window_opened_handler)
-        screen.disconnect(window_closed_handler)
+        screen.disconnect(handlers.window_opened_handler)
+        screen.disconnect(handlers.window_closed_handler)
         yield None
 
     return manage, unmanage
