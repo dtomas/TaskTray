@@ -1,84 +1,35 @@
-from traylib.tray import Tray, TrayConfig
-from traylib.icon import IconConfig
+from functools import partial
 
-from tasktray.appicon import AppIcon
+from rox import tasks
+
+from traylib.tray_config import TrayConfig
+from traylib.managed_tray import ManagedTray
+from traylib.icon import IconConfig
+from traylib.winicon_manager import WinIconManager
+
+from tasktray.appicon_manager import AppIconManager
 from tasktray.main_icon import MainIcon
 
 
-class TaskTray(Tray):
+class TaskTray(ManagedTray):
 
     def __init__(self, icon_config, tray_config, win_config, appicon_config,
                  screen):
         self.__win_config = win_config
         self.__appicon_config = appicon_config
         self.__screen = screen
-        self.__class_groups = {}
-        self.__active_icon = None
 
-        Tray.__init__(self, icon_config, tray_config, MainIcon,
-                      win_config, screen)
-
-        self.add_box(None)
-
-        screen.connect("window-opened", self.__window_opened)
-        screen.connect("window-closed", self.__window_closed)
-        screen.connect(
-            "active-window-changed", self.__active_window_changed
+        ManagedTray.__init__(
+            self, icon_config, tray_config,
+            partial(
+                AppIconManager,
+                screen=screen,
+                icon_config=icon_config,
+                win_config=win_config,
+                appicon_config=appicon_config
+            ),
+            MainIcon, win_config, screen
         )
-        screen.connect("active-workspace-changed", 
-                        self.__active_workspace_changed)
-
-        for window in screen.get_windows():
-            self.__window_opened(screen, window)
-        self.__active_window_changed(screen)
-
-    def __active_window_changed(self, screen, window = None):
-        if self.__active_icon:
-            self.__active_icon.update_zoom_factor()
-            self.__active_icon.update_icon()
-        window = screen.get_active_window()
-        if window:
-            icon = self.get_icon(window.get_class_group())
-            if icon:
-                icon.update_zoom_factor()
-                icon.update_icon()
-            self.__active_icon = icon
-        else:
-            self.__active_icon = None
-
-    def __active_workspace_changed(self, screen, workspace = None):
-        if self.__win_config.all_workspaces:
-            return
-        for icon in self.icons:
-            icon.update_windows()
-
-    def __window_opened(self, screen, window):
-        class_group = window.get_class_group()
-        icon = self.get_icon(class_group)
-        if not icon:
-            icon = AppIcon(self.icon_config, 
-                           self.__win_config,
-                           self.__appicon_config,
-                           class_group,
-                           self.__screen)
-            icon.update_name()
-            icon.update_icon()
-            self.add_icon(None, class_group, icon)
-        icon.add_window(window)
-        self.__class_groups[window] = class_group
-
-    def __window_closed(self, screen, window):
-        class_group = self.__class_groups.get(window)
-        if not class_group:
-            return
-        icon = self.get_icon(class_group)
-        if icon:
-            icon.remove_window(window)
-            if not icon.has_windows:
-                self.remove_icon(class_group)
-            else:
-                icon.update_icon()
-        del self.__class_groups[window]
 
     win_config = property(lambda self : self.__win_config)
     appicon_config = property(lambda self : self.__appicon_config)
