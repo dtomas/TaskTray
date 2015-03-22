@@ -12,6 +12,25 @@ You need libwnck and its python-bindings to run it.
 libwnck: http://ftp.gnome.org/pub/GNOME/sources/libwnck
 gnome-python-desktop: http://ftp.gnome.org/pub/GNOME/sources/gnome-python-desktop
 
+Installation
+~~~~~~~~~~~~
+Get TaskTray and its submodules from GitHub:
+
+$ git clone --recursive https://github.com/dtomas/TaskTray
+
+ROX
+~~~
+Drag the TaskTray app dir to a ROX panel.
+
+XFCE
+~~~~
+Run the install script:
+
+$ sudo python install_xfce.py
+
+Then choose "Add New Items" from the panel menu and select TaskTray from the
+list of items.
+
 Conditions
 ~~~~~~~~~~
 This program is free software; you can redistribute it and/or modify
