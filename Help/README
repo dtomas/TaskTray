@@ -16,7 +16,7 @@ Installation
 ~~~~~~~~~~~~
 Get TaskTray and its submodules from GitHub:
 
-$ git clone --recursive https://github.com/dtomas/TaskTray
+$ git clone --recursive https://github.com/dtomas/TaskTray.git
 
 ROX
 ~~~
