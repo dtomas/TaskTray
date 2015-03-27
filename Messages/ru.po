@@ -1,7 +1,7 @@
 # TaskTray Applet
 # Copyright (C) 2006 Dennis Tomas
 # This file is distributed under the same license as the TaskTray package.
-# Dennis Tomas <dtomas@users.berlios.de>, 2006.
+# Dennis Tomas <den.t@gmx.de>, 2006.
 # 
 msgid ""
 msgstr ""
