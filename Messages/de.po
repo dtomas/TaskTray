@@ -6,44 +6,16 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: TaskTray 0.7\n"
+"Project-Id-Version: TaskTray 0.7.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-01 08:28+CET\n"
+"POT-Creation-Date: 2015-03-27 18:25+CET\n"
 "PO-Revision-Date: 2007-04-02 10:18+0200\n"
 "Last-Translator: Dennis Tomas <den.t@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: AppRun:21
-msgid ""
-"%s needs TrayLib version 0.3 or greater. You can download it from ftp://ftp."
-"berlios.de/pub/rox4debian/libs."
-msgstr ""
-
-#: findlib.py:27
-msgid ""
-"%s needs %s to run. Please download it from %s and put it into one of the "
-"following locations:\n"
-"\n"
-msgstr ""
-
-#: main_icon.py:51
-msgid "Click to show windows.\n"
-msgstr "Klicken, um die Fenster anzuzeigen.\n"
-
-#: main_icon.py:53
-msgid "Click to show the desktop.\n"
-msgstr "Klicken, um den Arbeitsplatz anzuzeigen.\n"
-
-#: main_icon.py:55
-msgid "Scroll down to only show windows of this workspace."
-msgstr "Abwärts rollen, um nur Fenster dieser Arbeitsfläche anzuzeigen."
-
-#: main_icon.py:57
-msgid "Scroll up to show windows of all workspaces."
-msgstr "Aufwärts rollen, um Fenster aller Arbeitsflächen anzuzeigen."
 
 #: tipsH:1 tipsV:1
 msgid "Behaviour"
@@ -100,6 +72,18 @@ msgstr "Oben"
 #: tipsV:6 tipsV:9
 msgid "Bottom"
 msgstr "Unten"
+
+#~ msgid "Click to show windows.\n"
+#~ msgstr "Klicken, um die Fenster anzuzeigen.\n"
+
+#~ msgid "Click to show the desktop.\n"
+#~ msgstr "Klicken, um den Arbeitsplatz anzuzeigen.\n"
+
+#~ msgid "Scroll down to only show windows of this workspace."
+#~ msgstr "Abwärts rollen, um nur Fenster dieser Arbeitsfläche anzuzeigen."
+
+#~ msgid "Scroll up to show windows of all workspaces."
+#~ msgstr "Aufwärts rollen, um Fenster aller Arbeitsflächen anzuzeigen."
 
 #~ msgid "Right click will open the TaskTray menu."
 #~ msgstr "Rechtsklick öffnet das TaskTray-Menü."
