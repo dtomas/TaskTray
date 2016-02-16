@@ -46,7 +46,8 @@ class AppIcon(WinIcon):
                     app_info = os.path.join(app_dir, 'AppInfo.xml')
                     if os.access(app_info, os.R_OK):
                         self.__app_options = (
-                            AppInfo.AppInfo(app_info).getAppMenu())
+                            AppInfo.AppInfo(app_info).getAppMenu()
+                        )
                         break
             if not self.__help_dir:
                 for datadir in xdg_data_dirs:
@@ -58,15 +59,16 @@ class AppIcon(WinIcon):
         self.__class_group.connect("icon_changed", self.__icon_changed)
         self.__class_group.connect("name_changed", self.__name_changed)
 
-        self.drag_source_set(gtk.gdk.BUTTON1_MASK, 
-                            [("application/x-wnck-window-id", 
-                                0,
-                                TARGET_WNCK_WINDOW_ID)], 
-                            gtk.gdk.ACTION_MOVE)
+        self.drag_source_set(
+            gtk.gdk.BUTTON1_MASK,
+            [("application/x-wnck-window-id", 0, TARGET_WNCK_WINDOW_ID)],
+            gtk.gdk.ACTION_MOVE
+        )
         self.connect("drag-data-get", self.__drag_data_get)
 
-        self.screen.connect("showing-desktop-changed",
-                       self.__showing_desktop_changed)
+        self.screen.connect(
+            "showing-desktop-changed", self.__showing_desktop_changed
+        )
         
     def __showing_desktop_changed(self, screen):
         self.update_visibility()
@@ -87,8 +89,10 @@ class AppIcon(WinIcon):
     # Methods from WinIcon.
 
     def window_is_visible(self, window):
-        return (WinIcon.window_is_visible(self, window) 
-            and window.get_class_group() == self.__class_group)
+        return (
+            WinIcon.window_is_visible(self, window) and
+            window.get_class_group() == self.__class_group
+        )
 
     def should_have_window(self, window):
         return window.get_class_group() == self.__class_group
@@ -111,8 +115,9 @@ class AppIcon(WinIcon):
             item.connect("activate", self.__show_help)
         for option in self.__app_options:
             item = gtk.ImageMenuItem(option.get('label'))
-            item.connect("activate", self.__run_with_option,
-                         option.get('option'))
+            item.connect(
+                "activate", self.__run_with_option, option.get('option')
+            )
             stock_id = option.get('icon')
             if stock_id:
                 item.get_image().set_from_stock(stock_id, gtk.ICON_SIZE_MENU)
@@ -153,8 +158,9 @@ class AppIcon(WinIcon):
             if window.needs_attention():
                 name = '!! ' + name + ' !!'
             return name
-        return "%s (%d)" % (self.__class_group.get_name(), 
-                            len(visible_windows))
+        return (
+            "%s (%d)" % (self.__class_group.get_name(), len(visible_windows))
+        )
 
     def make_visibility(self):
         return (
@@ -170,6 +176,6 @@ class AppIcon(WinIcon):
 
     def __run_with_option(self, menu_item, option):
         """Runs the given appdir with the given option.""" 
-        processes.PipeThroughCommand((os.path.join(self.__app_dir, 'AppRun'), 
-                                        option), 
-                                    None, None).start()
+        processes.PipeThroughCommand(
+            (os.path.join(self.__app_dir, 'AppRun'), option), None, None
+        ).start()

@@ -11,8 +11,9 @@ def manage_appicons(tray, screen, icon_config, win_config, appicon_config):
         class_group = window.get_class_group()
         icon = tray.get_icon(class_group)
         if not icon:
-            icon = AppIcon(icon_config, win_config, appicon_config,
-                           class_group, screen)
+            icon = AppIcon(
+                icon_config, win_config, appicon_config, class_group, screen
+            )
             icon.update_name()
             icon.update_icon()
             tray.add_icon(None, class_group, icon)
@@ -34,10 +35,12 @@ def manage_appicons(tray, screen, icon_config, win_config, appicon_config):
         pass
 
     def manage():
-        handlers.window_opened_handler = screen.connect("window-opened",
-                                                        window_opened)
-        handlers.window_closed_handler = screen.connect("window-closed",
-                                                        window_closed)
+        handlers.window_opened_handler = (
+            screen.connect("window-opened", window_opened)
+        )
+        handlers.window_closed_handler = (
+            screen.connect("window-closed", window_closed)
+        )
         for window in screen.get_windows():
             window_opened(screen, window)
             yield None

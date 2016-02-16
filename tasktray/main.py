@@ -59,12 +59,14 @@ class TaskTrayMain(Main):
     def options_changed(self):
         if self.__o_arrow.has_changed:
             self.__win_config.arrow = self.__o_arrow.int_value
-    
         if self.__o_all_workspaces.has_changed:
-            self.__win_config.all_workspaces = self.__o_all_workspaces.int_value
-            
+            self.__win_config.all_workspaces = (
+                self.__o_all_workspaces.int_value
+            )
         if self.__o_themed_icons.has_changed:
-            self.__appicon_config.themed_icons = self.__o_themed_icons.int_value
+            self.__appicon_config.themed_icons = (
+                self.__o_themed_icons.int_value
+            )
 
         Main.options_changed(self)
 
