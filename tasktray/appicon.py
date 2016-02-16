@@ -163,12 +163,6 @@ class AppIcon(WinIcon):
             WinIcon.make_visibility(self)
         )
 
-
-    # Methods called when AppIconConfig has changed.
-
-    def update_option_themed_icons(self):
-        self.update_icon()
-
     
     # Methods for app options
 
