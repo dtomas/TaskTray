@@ -3,23 +3,19 @@ from traylib.menu_icon import MenuIcon
 
 class MainIcon(MenuIcon):
 
-    def __init__(self, tray, icon_config, tray_config, win_config, screen):
-        MenuIcon.__init__(self, tray, icon_config, tray_config)
+    def __init__(self, tray, win_config, screen):
+        MenuIcon.__init__(self, tray)
         self.__screen = screen
         self.__win_config = win_config
         screen.connect(
             "showing-desktop-changed", self.__showing_desktop_changed
         )
-        win_config.add_configurable(self)
+        win_config.connect_simple(
+            "all-workspaces-changed", self.update_tooltip
+        )
 
     def __showing_desktop_changed(self, screen):
         self.update_icon()
-        self.update_tooltip()
-
-
-    # Methods called when WinIconConfig has changed.
-
-    def update_option_all_workspaces(self):
         self.update_tooltip()
 
 
