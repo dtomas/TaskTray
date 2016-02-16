@@ -18,7 +18,9 @@ class AppIcon(WinIcon):
         WinIcon.__init__(self, icon_config, win_config, screen)
 
         self.__appicon_config = appicon_config
-        appicon_config.connect("themed-icons-changed", self.update_icon)
+        appicon_config.connect(
+            "themed-icons-changed", lambda appicon_config: self.update_icon()
+        )
 
         self.__class_group = class_group
 

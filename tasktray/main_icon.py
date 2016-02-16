@@ -10,8 +10,8 @@ class MainIcon(MenuIcon):
         screen.connect(
             "showing-desktop-changed", self.__showing_desktop_changed
         )
-        win_config.connect_simple(
-            "all-workspaces-changed", self.update_tooltip
+        win_config.connect(
+            "all-workspaces-changed", lambda win_config: self.update_tooltip()
         )
 
     def __showing_desktop_changed(self, screen):
