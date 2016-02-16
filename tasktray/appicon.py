@@ -35,8 +35,7 @@ class AppIcon(WinIcon):
                     continue
                 app_dir = os.path.join(path, dirname)
                 if not os.path.isdir(app_dir):
-                    app_dir = os.path.join(path,
-                                           dirname[0].upper() + dirname[1:])
+                    app_dir = os.path.join(path, dirname.capitalize())
                 if not os.path.isdir(app_dir):
                     app_dir = os.path.join(path, dirname.upper())
                 if rox.isappdir(app_dir):
