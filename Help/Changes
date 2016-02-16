@@ -2,9 +2,9 @@
 			Shows open windows
 			by Dennis Tomas
 
-0.7.5
+0.7.5 (unreleased)
 ~~~~~
-Adapted to new TrayLib API.
+Now using TrayLib 0.6. See TrayLib/Help/Changes.
 
 0.7.4
 ~~~~~
