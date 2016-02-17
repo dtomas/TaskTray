@@ -3,6 +3,7 @@ from tasktray.appicon import AppIcon
 
 def manage_appicons(tray, screen, icon_config, win_config, appicon_config):
 
+    screen_signal_handlers = []
     class_groups = {}
 
     tray.add_box(None)
@@ -33,14 +34,11 @@ def manage_appicons(tray, screen, icon_config, win_config, appicon_config):
                 icon.update_icon()
         del class_groups[window]
 
-    class handlers:
-        pass
-
     def manage():
-        handlers.window_opened_handler = (
+        screen_signal_handlers.append(
             screen.connect("window-opened", window_opened)
         )
-        handlers.window_closed_handler = (
+        screen_signal_handlers.append(
             screen.connect("window-closed", window_closed)
         )
         for window in screen.get_windows():
@@ -48,8 +46,8 @@ def manage_appicons(tray, screen, icon_config, win_config, appicon_config):
             yield None
 
     def unmanage():
-        screen.disconnect(handlers.window_opened_handler)
-        screen.disconnect(handlers.window_closed_handler)
+        for handler in screen_signal_handlers:
+            screen.disconnect(handler)
         yield None
 
     return manage, unmanage
