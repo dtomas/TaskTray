@@ -18,9 +18,12 @@ class AppIcon(WinIcon):
         WinIcon.__init__(self, icon_config, win_config, screen)
 
         self.__appicon_config = appicon_config
-        appicon_config.connect(
-            "themed-icons-changed", lambda appicon_config: self.update_icon()
-        )
+
+        self.__appicon_config_signal_handlers = [
+            appicon_config.connect(
+                "themed-icons-changed", lambda config: self.update_icon()
+            )
+        ]
 
         self.__class_group = class_group
 
@@ -65,10 +68,15 @@ class AppIcon(WinIcon):
             gtk.gdk.ACTION_MOVE
         )
         self.connect("drag-data-get", self.__drag_data_get)
+        self.connect("destroy", self.__destroy)
 
         self.screen.connect(
             "showing-desktop-changed", self.__showing_desktop_changed
         )
+
+    def __destroy(self, widget):
+        for handler in self.__appicon_config_signal_handlers:
+            self.__appicon_config.disconnect(handler)
         
     def __showing_desktop_changed(self, screen):
         self.update_visibility()

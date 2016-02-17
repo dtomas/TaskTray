@@ -7,16 +7,31 @@ class MainIcon(MenuIcon):
         MenuIcon.__init__(self, tray)
         self.__screen = screen
         self.__win_config = win_config
-        screen.connect(
-            "showing-desktop-changed", self.__showing_desktop_changed
-        )
-        win_config.connect(
-            "all-workspaces-changed", lambda win_config: self.update_tooltip()
-        )
+        self.__screen_signal_handlers = [
+            screen.connect(
+                "showing-desktop-changed", self.__showing_desktop_changed
+            )
+        ]
+        self.__win_config_signal_handlers = [
+            win_config.connect(
+                "all-workspaces-changed",
+                lambda win_config: self.update_tooltip()
+            )
+        ]
+        self.connect("destroy", self.__destroy)
+
+
+    # Signal callbacks
 
     def __showing_desktop_changed(self, screen):
         self.update_icon()
         self.update_tooltip()
+
+    def __destroy(self, widget):
+        for handler in self.__screen_signal_handlers:
+            self.__screen.disconnect(handler)
+        for handler in self.__win_config_signal_handlers:
+            self.__win_config.disconnect(handler)
 
 
     # Methods inherited from Icon.
