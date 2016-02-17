@@ -25,6 +25,7 @@ def manage_appicons(tray, screen, icon_config, win_config, appicon_config):
             return
         icon = tray.get_icon(class_group)
         if icon:
+            icon.remove_window(window)
             if not icon.has_windows:
                 tray.remove_icon(class_group)
             else:
