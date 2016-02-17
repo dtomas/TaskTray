@@ -94,12 +94,6 @@ class AppIcon(WinIcon):
         self.update_icon()
 
 
-    # Methods from WinIcon.
-
-    def should_have_window(self, window):
-        return window.get_class_group() == self.__class_group
-
-
     # Methods from Icon.
 
     def get_menu_right(self):
