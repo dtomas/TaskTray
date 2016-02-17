@@ -5,7 +5,6 @@ from rox import tasks
 from traylib.tray_config import TrayConfig
 from traylib.managed_tray import ManagedTray
 from traylib.icon import IconConfig
-from traylib.winicon_manager import manage_winicons
 
 from tasktray.appicon_manager import manage_appicons
 from tasktray.main_icon import MainIcon
@@ -28,11 +27,7 @@ class TaskTray(ManagedTray):
                     icon_config=icon_config,
                     win_config=win_config,
                     appicon_config=appicon_config,
-                ),
-                partial(
-                    manage_winicons,
-                    screen=screen,
-                ),
+                )
             ],
             create_menu_icon=partial(
                 MainIcon,

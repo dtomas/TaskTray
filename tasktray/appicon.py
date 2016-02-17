@@ -96,12 +96,6 @@ class AppIcon(WinIcon):
 
     # Methods from WinIcon.
 
-    def window_is_visible(self, window):
-        return (
-            WinIcon.window_is_visible(self, window) and
-            window.get_class_group() == self.__class_group
-        )
-
     def should_have_window(self, window):
         return window.get_class_group() == self.__class_group
 
