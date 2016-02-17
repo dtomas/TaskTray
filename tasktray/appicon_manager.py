@@ -17,6 +17,7 @@ def manage_appicons(tray, screen, icon_config, win_config, appicon_config):
             icon.update_name()
             icon.update_icon()
             tray.add_icon(None, class_group, icon)
+        icon.add_window(window)
         class_groups[window] = class_group
 
     def window_closed(screen, window):
