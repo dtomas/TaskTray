@@ -2,6 +2,10 @@
 			Shows open windows
 			by Dennis Tomas
 
+2.0.0 (unreleased)
+~~~~~
+Now using TrayLib 2.0.0. See TrayLib/Help/Changes.
+
 0.7.5 (unreleased)
 ~~~~~
 Make sure icons are removed when their last window closes.

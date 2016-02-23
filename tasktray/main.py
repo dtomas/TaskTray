@@ -5,10 +5,10 @@ from rox.options import Option
 
 from traylib import ICON_THEME
 from traylib.main import Main
-from traylib.winicon import WinIconConfig
+from traylib.winitem_config import WinItemConfig
 
 from tasktray import TaskTray
-from tasktray.appicon_config import AppIconConfig
+from tasktray.appitem_config import AppItemConfig
 
 import wnck
 
@@ -32,12 +32,12 @@ class TaskTrayMain(Main):
         
     def init_config(self):
         Main.init_config(self)
-        self.__win_config = WinIconConfig(
+        self.__win_config = WinItemConfig(
             all_workspaces=self.__o_all_workspaces.int_value, 
             arrow=self.__o_arrow.int_value,
         )
 
-        self.__appicon_config = AppIconConfig(
+        self.__appitem_config = AppItemConfig(
             themed_icons=self.__o_themed_icons.int_value,
         )
 
@@ -51,7 +51,7 @@ class TaskTrayMain(Main):
             partial(
                 TaskTray,
                 win_config=self.__win_config,
-                appicon_config=self.__appicon_config,
+                appitem_config=self.__appitem_config,
                 screen=self.__screen,
             )
         )
@@ -64,11 +64,11 @@ class TaskTrayMain(Main):
                 self.__o_all_workspaces.int_value
             )
         if self.__o_themed_icons.has_changed:
-            self.__appicon_config.themed_icons = (
+            self.__appitem_config.themed_icons = (
                 self.__o_themed_icons.int_value
             )
 
         Main.options_changed(self)
 
     win_config = property(lambda self : self.__win_config)
-    appicon_config = property(lambda self : self.__appicon_config)
+    appitem_config = property(lambda self : self.__appitem_config)
