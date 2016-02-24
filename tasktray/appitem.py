@@ -175,6 +175,12 @@ class AppItem(ItemWrapper):
             not self.__screen.get_showing_desktop() and
             self.item.is_visible()
         )
+
+    def get_name(self):
+        visible_window_items = self.item.visible_window_items
+        if len(visible_window_items) == 1:
+            return visible_window_items[0].get_name()
+        return self.item.get_name()
     
     # Methods for app options
 
