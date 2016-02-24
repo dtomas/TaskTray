@@ -152,17 +152,6 @@ class AppItem(ItemWrapper):
             return []
         return [self.__class_group.get_name().lower()]
 
-    def get_icon_pixbuf(self):
-        icon = None
-        for window_item in self.item.window_items:
-            window = window_item.window
-            app = window.get_application()
-            if app and not app.get_icon_is_fallback():
-                icon = window.get_icon()
-                if window.is_active():
-                    break
-        return icon
-
     def is_visible(self):
         return (
             not self.__screen.get_showing_desktop() and
