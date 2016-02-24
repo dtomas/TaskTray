@@ -54,7 +54,7 @@ class AppItem(ItemWrapper):
                         break
 
         self.__class_group_handlers = [
-            self.__class_group.connect("icon_changed", self.__icon_changed),
+            #self.__class_group.connect("icon_changed", self.__icon_changed),
             self.__class_group.connect("name_changed", self.__name_changed),
         ]
 
@@ -103,8 +103,8 @@ class AppItem(ItemWrapper):
     def __themed_icons_changed(self, appitem_config):
         self.emit("icon-changed")
 
-    def __icon_changed(self, class_group):
-        self.emit("icon-changed")
+    #def __icon_changed(self, class_group):
+    #    self.emit("icon-changed")
 
     def __name_changed(self, class_group):
         self.item.name = class_group.get_name()
@@ -150,10 +150,25 @@ class AppItem(ItemWrapper):
     def get_icon_names(self):
         if not self.__appitem_config.themed_icons:
             return []
-        return [self.__class_group.get_name().lower()]
+        icon_names = set()
+        for window_item in self.item.visible_window_items:
+            app = window_item.window.get_application()
+            if app is None or app.get_icon_is_fallback():
+                continue
+            icon_names.add(app.get_icon_name())
+        icon_names = list(icon_names) + [
+            self.__class_group.get_name().lower(),
+            self.__class_group.get_res_class().lower()
+        ]
+        return icon_names
 
     def get_icon_pixbuf(self):
-        return self.__class_group.get_icon()
+        for window_item in self.item.visible_window_items:
+            app = window_item.window.get_application()
+            if app is None or app.get_icon_is_fallback():
+                continue
+            return app.get_icon()
+        return None
 
     def is_visible(self):
         return (
