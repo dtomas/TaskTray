@@ -55,7 +55,6 @@ class AppItem(ItemWrapper):
                         break
 
         self.__class_group_handlers = [
-            #self.__class_group.connect("icon_changed", self.__icon_changed),
             self.__class_group.connect("name_changed", self.__name_changed),
         ]
 
@@ -73,13 +72,6 @@ class AppItem(ItemWrapper):
         for window in self.__screen.get_windows():
             if window.get_class_group() is class_group:
                 self.__window_opened(screen, window)
-
-        #self.drag_source_set(
-        #    gtk.gdk.BUTTON1_MASK,
-        #    [("application/x-wnck-window-id", 0, TARGET_WNCK_WINDOW_ID)],
-        #    gtk.gdk.ACTION_MOVE
-        #)
-        #self.connect("drag-data-get", self.__drag_data_get)
 
         self.connect("destroyed", self.__destroyed)
 
@@ -103,9 +95,6 @@ class AppItem(ItemWrapper):
 
     def __themed_icons_changed(self, appitem_config):
         self.emit("icon-changed")
-
-    #def __icon_changed(self, class_group):
-    #    self.emit("icon-changed")
 
     def __name_changed(self, class_group):
         self.item.name = class_group.get_name()
