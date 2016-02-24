@@ -9,6 +9,7 @@ from rox.basedir import xdg_data_dirs
 from traylib import APPDIRPATH
 from traylib.item import ItemWrapper
 from traylib.winitem import WindowsItem
+from traylib.icons import ThemedIcon, PixbufIcon
 
 
 class AppItem(ItemWrapper):
@@ -147,28 +148,27 @@ class AppItem(ItemWrapper):
             menu.prepend(item)
         return menu
     
-    def get_icon_names(self):
-        if not self.__appitem_config.themed_icons:
-            return []
-        icon_names = set()
+    def get_icons(self):
+        if self.__appitem_config.themed_icons:
+            icon_names = set()
+            for window_item in self.item.visible_window_items:
+                app = window_item.window.get_application()
+                if app is None or app.get_icon_is_fallback():
+                    continue
+                icon_names.add(app.get_icon_name())
+            icon_names = list(icon_names) + [
+                self.__class_group.get_name().lower(),
+                self.__class_group.get_res_class().lower()
+            ]
+            icons = [ThemedIcon(icon_name) for icon_name in icon_names]
         for window_item in self.item.visible_window_items:
             app = window_item.window.get_application()
             if app is None or app.get_icon_is_fallback():
                 continue
-            icon_names.add(app.get_icon_name())
-        icon_names = list(icon_names) + [
-            self.__class_group.get_name().lower(),
-            self.__class_group.get_res_class().lower()
-        ]
-        return icon_names
-
-    def get_icon_pixbuf(self):
-        for window_item in self.item.visible_window_items:
-            app = window_item.window.get_application()
-            if app is None or app.get_icon_is_fallback():
-                continue
-            return app.get_icon()
-        return None
+            icons.append(PixbufIcon(app.get_icon()))
+            break
+        icons += self.item.get_icons()
+        return icons
 
     def is_visible(self):
         return (

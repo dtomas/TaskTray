@@ -1,4 +1,5 @@
 from traylib.main_item import MainItem
+from traylib.icons import ThemedIcon
 
 
 class TaskTrayMainItem(MainItem):
@@ -47,11 +48,11 @@ class TaskTrayMainItem(MainItem):
     def mouse_wheel_down(self, time):
         self.__win_config.all_workspaces = False
 
-    def get_icon_names(self):
+    def get_icons(self):
         if self.__screen.get_showing_desktop():
-            return ["preferences-system-windows"]
+            return [ThemedIcon("preferences-system-windows")]
         else:
-            return ["user-desktop"]
+            return [ThemedIcon("user-desktop")]
 
     def get_name(self):
         if self.__screen.get_showing_desktop():
