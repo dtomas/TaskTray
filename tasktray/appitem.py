@@ -167,7 +167,6 @@ class AppItem(ItemWrapper):
                 continue
             icons.append(PixbufIcon(app.get_icon()))
             break
-        icons += self.item.get_icons()
         return icons
 
     def is_visible(self):
