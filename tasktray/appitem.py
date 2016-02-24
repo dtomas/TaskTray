@@ -153,10 +153,7 @@ class AppItem(ItemWrapper):
         return [self.__class_group.get_name().lower()]
 
     def get_icon_pixbuf(self):
-        icon = self.item.get_icon_pixbuf()
-        if icon is None:
-            icon = self.__class_group.get_icon()
-        return icon
+        return self.__class_group.get_icon()
 
     def is_visible(self):
         return (
