@@ -19,57 +19,30 @@ class AppItem(AWindowsItem):
         self.__class_group = class_group
         self.__screen = screen
 
-        self.__app_dir = None
-        self.__help_dir = None
-        self.__app_options = []
-
-        dirname = self.__class_group.get_name()
-        if dirname:
-            for path in APPDIRPATH:
-                if not path:
-                    continue
-                app_dir = os.path.join(path, dirname)
-                if not os.path.isdir(app_dir):
-                    app_dir = os.path.join(path, dirname.capitalize())
-                if not os.path.isdir(app_dir):
-                    app_dir = os.path.join(path, dirname.upper())
-                if rox.isappdir(app_dir):
-                    self.__app_dir = app_dir
-                    help_dir = os.path.join(app_dir, 'Help')
-                    if os.path.isdir(help_dir):
-                        self.__help_dir = help_dir
-                    app_info = os.path.join(app_dir, 'AppInfo.xml')
-                    if os.access(app_info, os.R_OK):
-                        self.__app_options = (
-                            AppInfo.AppInfo(app_info).getAppMenu()
-                        )
-                        break
-            if not self.__help_dir:
-                for datadir in xdg_data_dirs:
-                    help_dir = os.path.join(datadir, 'doc', dirname.lower())
-                    if os.path.isdir(help_dir):
-                        self.__help_dir = help_dir
-                        break
+        self.__update_app()
 
         self.__class_group_handlers = [
             self.__class_group.connect("name_changed", self.__name_changed),
         ]
 
         self.__screen_handlers = [
-            self.__screen.connect(
+            screen.connect(
                 "showing-desktop-changed", self.__showing_desktop_changed
             ),
-            self.__screen.connect("window-opened", self.__window_opened),
-            self.__screen.connect("window-closed", self.__window_closed),
-            self.__screen.connect(
+            screen.connect("window-opened", self.__window_opened),
+            screen.connect("window-closed", self.__window_closed),
+            screen.connect(
                 "class-group-closed", self.__class_group_closed
             ),
         ]
 
-        for window in self.__screen.get_windows():
+        for window in screen.get_windows():
             if window.get_class_group() is class_group:
                 self.__window_opened(screen, window)
 
+        self.connect(
+            "visible-window-items-changed", self.__visible_window_items_changed
+        )
         self.connect("destroyed", self.__destroyed)
 
         self.__appitem_config_handlers = [
@@ -89,6 +62,10 @@ class AppItem(AWindowsItem):
         for handler in self.__class_group_handlers:
             self.__class_group.disconnect(handler)
 
+    def __visible_window_items_changed(self, item):
+        self.emit("icon-changed")
+        self.emit("name-changed")
+
     def __class_group_closed(self, screen, class_group):
         if class_group is self.__class_group:
             self.destroy()
@@ -97,8 +74,10 @@ class AppItem(AWindowsItem):
         self.emit("icon-changed")
 
     def __name_changed(self, class_group):
-        self.emit("name-changed")
+        self.__update_app()
+        self.emit("base-name-changed")
         self.emit("icon-changed")
+        self.emit("menu-right-changed")
 
     def __window_opened(self, screen, window):
         if window.get_class_group() is self.__class_group:
@@ -106,7 +85,6 @@ class AppItem(AWindowsItem):
 
     def __window_closed(self, screen, window):
         self.remove_window(window)
-        self.emit("name-changed")
 
     def __showing_desktop_changed(self, screen):
         self.emit("is-visible-changed")
@@ -119,6 +97,45 @@ class AppItem(AWindowsItem):
         processes.PipeThroughCommand(
             (os.path.join(self.__app_dir, 'AppRun'), option), None, None
         ).start()
+
+
+    # Private methods:
+
+    def __update_app(self):
+        self.__app_dir = None
+        self.__help_dir = None
+        self.__app_options = []
+
+        dirname = self.__class_group.get_name()
+        if not dirname:
+            return
+
+        for path in APPDIRPATH:
+            if not path:
+                continue
+            app_dir = os.path.join(path, dirname)
+            if not os.path.isdir(app_dir):
+                app_dir = os.path.join(path, dirname.capitalize())
+            if not os.path.isdir(app_dir):
+                app_dir = os.path.join(path, dirname.upper())
+            if rox.isappdir(app_dir):
+                self.__app_dir = app_dir
+                help_dir = os.path.join(app_dir, 'Help')
+                if os.path.isdir(help_dir):
+                    self.__help_dir = help_dir
+                app_info = os.path.join(app_dir, 'AppInfo.xml')
+                if os.access(app_info, os.R_OK):
+                    self.__app_options = (
+                        AppInfo.AppInfo(app_info).getAppMenu()
+                    )
+                    break
+
+        if not self.__help_dir:
+            for datadir in xdg_data_dirs:
+                help_dir = os.path.join(datadir, 'doc', dirname.lower())
+                if os.path.isdir(help_dir):
+                    self.__help_dir = help_dir
+                    break
 
 
     # Item implementation:
