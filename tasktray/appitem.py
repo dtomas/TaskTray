@@ -7,17 +7,14 @@ from rox import AppInfo, processes, filer
 from rox.basedir import xdg_data_dirs
 
 from traylib import APPDIRPATH
-from traylib.item import ItemWrapper
-from traylib.winitem import WindowsItem
+from traylib.winitem import AWindowsItem
 from traylib.icons import ThemedIcon, PixbufIcon
 
 
-class AppItem(ItemWrapper):
+class AppItem(AWindowsItem):
 
     def __init__(self, win_config, appitem_config, class_group, screen):
-        ItemWrapper.__init__(
-            self, WindowsItem(win_config, screen, class_group.get_name())
-        )
+        AWindowsItem.__init__(self, win_config, screen)
         self.__appitem_config = appitem_config
         self.__class_group = class_group
         self.__screen = screen
@@ -81,6 +78,9 @@ class AppItem(ItemWrapper):
             ),
         ]
 
+
+    # Signal callbacks:
+
     def __destroyed(self, item):
         for handler in self.__screen_handlers:
             self.__screen.disconnect(handler)
@@ -97,22 +97,34 @@ class AppItem(ItemWrapper):
         self.emit("icon-changed")
 
     def __name_changed(self, class_group):
-        self.item.name = class_group.get_name()
+        self.emit("name-changed")
         self.emit("icon-changed")
 
     def __window_opened(self, screen, window):
         if window.get_class_group() is self.__class_group:
-            self.item.add_window(window)
+            self.add_window(window)
 
     def __window_closed(self, screen, window):
-        self.item.remove_window(window)
+        self.remove_window(window)
         self.emit("name-changed")
 
     def __showing_desktop_changed(self, screen):
         self.emit("is-visible-changed")
 
+    def __show_help(self, menu_item):
+        filer.open_dir(os.path.join(self.__help_dir))    
+
+    def __run_with_option(self, menu_item, option):
+        """Runs the given appdir with the given option.""" 
+        processes.PipeThroughCommand(
+            (os.path.join(self.__app_dir, 'AppRun'), option), None, None
+        ).start()
+
+
+    # Item implementation:
+
     def get_menu_right(self):
-        menu = self.item.get_menu_right()
+        menu = AWindowsItem.get_menu_right(self)
         if not self.__app_options and not self.__help_dir:
             return menu
         if not menu:
@@ -138,7 +150,7 @@ class AppItem(ItemWrapper):
     def get_icons(self):
         if self.__appitem_config.themed_icons:
             icon_names = set()
-            for window_item in self.item.visible_window_items:
+            for window_item in self.visible_window_items:
                 app = window_item.window.get_application()
                 if app is None or app.get_icon_is_fallback():
                     continue
@@ -150,7 +162,7 @@ class AppItem(ItemWrapper):
             icons = [ThemedIcon(icon_name) for icon_name in icon_names]
         else:
             icons = []
-        for window_item in self.item.visible_window_items:
+        for window_item in self.visible_window_items:
             app = window_item.window.get_application()
             if app is None or app.get_icon_is_fallback():
                 continue
@@ -161,22 +173,17 @@ class AppItem(ItemWrapper):
     def is_visible(self):
         return (
             not self.__screen.get_showing_desktop() and
-            self.item.is_visible()
+            AWindowsItem.is_visible(self)
         )
 
     def get_name(self):
-        visible_window_items = self.item.visible_window_items
+        visible_window_items = self.visible_window_items
         if len(visible_window_items) == 1:
             return visible_window_items[0].get_name()
-        return self.item.get_name()
-    
-    # Methods for app options
+        return AWindowsItem.get_name(self)
 
-    def __show_help(self, menu_item):
-        filer.open_dir(os.path.join(self.__help_dir))    
 
-    def __run_with_option(self, menu_item, option):
-        """Runs the given appdir with the given option.""" 
-        processes.PipeThroughCommand(
-            (os.path.join(self.__app_dir, 'AppRun'), option), None, None
-        ).start()
+    # AWindowsItem implementation:
+
+    def get_base_name(self):
+        return self.__class_group.get_name()
