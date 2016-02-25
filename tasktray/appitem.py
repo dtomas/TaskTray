@@ -98,7 +98,6 @@ class AppItem(ItemWrapper):
 
     def __name_changed(self, class_group):
         self.item.name = class_group.get_name()
-        self.emit("name-changed")
         self.emit("icon-changed")
 
     def __window_opened(self, screen, window):
