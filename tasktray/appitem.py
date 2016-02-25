@@ -103,7 +103,6 @@ class AppItem(ItemWrapper):
     def __window_opened(self, screen, window):
         if window.get_class_group() is self.__class_group:
             self.item.add_window(window)
-            self.emit("name-changed")
 
     def __window_closed(self, screen, window):
         self.item.remove_window(window)
