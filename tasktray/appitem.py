@@ -148,6 +148,8 @@ class AppItem(ItemWrapper):
                 self.__class_group.get_res_class().lower()
             ]
             icons = [ThemedIcon(icon_name) for icon_name in icon_names]
+        else:
+            icons = []
         for window_item in self.item.visible_window_items:
             app = window_item.window.get_application()
             if app is None or app.get_icon_is_fallback():
