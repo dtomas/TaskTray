@@ -1,31 +1,35 @@
 import os
-
-import gtk
-from ConfigParser import SafeConfigParser, NoOptionError
 from urllib import pathname2url
 
-import rox
-from rox import AppInfo, processes, filer
-from rox.basedir import xdg_data_dirs
+import gobject
+import gtk
 
-from traylib import APPDIRPATH, TARGET_URI_LIST
+import rox
+from rox import processes, filer
+
+from traylib import TARGET_URI_LIST
 from traylib.winitem import AWindowsItem
 from traylib.icons import ThemedIcon, PixbufIcon
+
+from tasktray.rox_app import ROXApp
+from tasktray.desktop_app import DesktopApp
 
 
 class AppItem(AWindowsItem):
 
-    def __init__(self, win_config, appitem_config, class_group, screen):
+    def __init__(self, win_config, appitem_config, screen, class_group=None,
+                 app=None, pinned=False):
+        assert class_group or app
+
         AWindowsItem.__init__(self, win_config, screen)
         self.__appitem_config = appitem_config
-        self.__class_group = class_group
         self.__screen = screen
+        self.__class_group = class_group
+        self.__app = app
+        self.__pinned = pinned
 
-        self.__update_app()
-
-        self.__class_group_handlers = [
-            self.__class_group.connect("name_changed", self.__name_changed),
-        ]
+        self.__class_group_handlers = []
+        self.__update_class_group()
 
         self.__screen_handlers = [
             screen.connect(
@@ -39,7 +43,7 @@ class AppItem(AWindowsItem):
         ]
 
         for window in screen.get_windows():
-            if window.get_class_group() is class_group:
+            if window.get_class_group() is self.__class_group:
                 self.__window_opened(screen, window)
 
         self.connect(
@@ -61,26 +65,30 @@ class AppItem(AWindowsItem):
             self.__screen.disconnect(handler)
         for handler in self.__appitem_config_handlers:
             self.__appitem_config.disconnect(handler)
-        for handler in self.__class_group_handlers:
-            self.__class_group.disconnect(handler)
+        if self.__class_group is not None:
+            for handler in self.__class_group_handlers:
+                self.__class_group.disconnect(handler)
 
     def __visible_window_items_changed(self, item):
         self.emit("icon-changed")
         self.emit("name-changed")
 
+    def offer_class_group(self, class_group):
+        self.__update_class_group()
+        return class_group is self.__class_group
+
     def __class_group_closed(self, screen, class_group):
         if class_group is self.__class_group:
-            self.destroy()
+            self.__class_group = None
+            if self.__app is None:
+                self.destroy()
+            else:
+                self.__update_class_group()
+                if not self.__pinned:
+                    self.destroy()
 
     def __themed_icons_changed(self, appitem_config):
         self.emit("icon-changed")
-
-    def __name_changed(self, class_group):
-        self.__update_app()
-        self.emit("base-name-changed")
-        self.emit("icon-changed")
-        self.emit("menu-right-changed")
-        self.emit("drag-source-changed")
 
     def __window_opened(self, screen, window):
         if window.get_class_group() is self.__class_group:
@@ -93,123 +101,98 @@ class AppItem(AWindowsItem):
         self.emit("is-visible-changed")
 
     def __show_help(self, menu_item):
-        filer.open_dir(os.path.join(self.__help_dir))    
+        filer.open_dir(os.path.join(self.__app.help_dir))
 
-    def __run_with_option(self, menu_item, option):
-        """Runs the given appdir with the given option.""" 
-        processes.PipeThroughCommand(
-            (os.path.join(self.__app_dir, 'AppRun'), option), None, None
-        ).start()
-
-    def __run_desktop_option(self, menu_item, exec_):
-        processes.PipeThroughCommand(exec_.split(' '), None, None).start()
+    def __exec_option(self, menu_item, option):
+        option.execute()
 
 
     # Private methods:
 
-    def __update_app(self):
-        self.__app_dir = None
-        self.__help_dir = None
-        self.__app_options = []
-        self.__desktop_file = None
-        self.__icon_name = None
+    def __update_class_group(self):
+        if self.__class_group is None:
+            class_groups = set()
+            for window in self.__screen.get_windows():
+                class_groups.add(window.get_class_group())
+            for class_group in class_groups:
+                if class_group.get_res_class().lower() == self.__app.id.lower():
+                    self.__class_group = class_group
+                    break
+                if class_group.get_name().lower() == self.__app.id.lower():
+                    self.__class_group = class_group
+                    break
 
-        appnames = (
-            self.__class_group.get_name(), self.__class_group.get_res_class()
-        )
-
-        for appname in appnames:
-            if self.__app_dir is None:
-                for path in APPDIRPATH:
-                    if not path:
-                        continue
-                    app_dir = os.path.join(path, appname)
-                    if not os.path.isdir(app_dir):
-                        app_dir = os.path.join(path, appname.capitalize())
-                    if not os.path.isdir(app_dir):
-                        app_dir = os.path.join(path, appname.upper())
-                    if rox.isappdir(app_dir):
-                        self.__app_dir = app_dir
-                        help_dir = os.path.join(app_dir, 'Help')
-                        if os.path.isdir(help_dir):
-                            self.__help_dir = help_dir
-                        app_info = os.path.join(app_dir, 'AppInfo.xml')
-                        if os.access(app_info, os.R_OK):
-                            self.__app_options = (
-                                AppInfo.AppInfo(app_info).getAppMenu()
-                            )
-                            break
-
-            if self.__help_dir is None:
-                for datadir in xdg_data_dirs:
-                    help_dir = os.path.join(datadir, 'doc', appname.lower())
-                    if os.path.isdir(help_dir):
-                        self.__help_dir = help_dir
+        if self.__class_group is not None and self.__app is None:
+            names = [
+                self.__class_group.get_name(),
+                self.__class_group.get_res_class(),
+            ]
+            for name in names:
+                self.__app = ROXApp.from_name(name)
+                if self.__app is not None:
+                    break
+            if self.__app is None:
+                for name in names:
+                    self.__app = DesktopApp.from_name(name)
+                    if self.__app is not None:
                         break
 
-            if self.__app_dir is None and self.__desktop_file is None:
-                for datadir in xdg_data_dirs:
-                    applications_dir = os.path.join(datadir, "applications")
-                    for leafname in appname, appname.lower(), appname.capitalize():
-                        desktop_file = os.path.join(
-                            applications_dir, leafname + ".desktop"
-                        )
-                        if os.path.exists(desktop_file):
-                            self.__desktop_file = desktop_file
-                            break
-                    if self.__desktop_file is not None:
-                        break
-
-        if self.__desktop_file is not None:
-            parser = SafeConfigParser()
-            parser.read([self.__desktop_file])
-            try:
-                self.__icon_name = parser.get("Desktop Entry", "Icon")
-            except NoOptionError:
-                pass
-            for section in parser.sections():
-                if not section.startswith("Desktop Action"):
-                    continue
-                self.__app_options.append({
-                    "label": parser.get(section, "Name"),
-                    "exec": parser.get(section, "Exec"),
-                })
+        self.emit("base-name-changed")
+        self.emit("name-changed")
+        self.emit("is-greyed-out-changed")
+        self.emit("zoom-changed")
 
 
     # Item implementation:
 
     def get_menu_right(self):
         menu = AWindowsItem.get_menu_right(self)
-        if not self.__app_options and not self.__help_dir:
+        if self.__app is None:
             return menu
         if not menu:
             menu = gtk.Menu()
         else:
             menu.prepend(gtk.SeparatorMenuItem())
             menu.prepend(gtk.SeparatorMenuItem())
-        if self.__help_dir:
+        if not self.__pinned:
+            def pin(item):
+                self.__pinned = True
+                self.emit("pinned")
+            item = gtk.ImageMenuItem(_("Premanently add to TaskTray."))
+            item.get_image().set_from_stock(
+                gtk.STOCK_ADD, gtk.ICON_SIZE_MENU
+            )
+            item.connect("activate", pin)
+            menu.prepend(item)
+        else:
+            def unpin(item):
+                self.__pinned = False
+                if self.__class_group is None:
+                    self.destroy()
+                self.emit("unpinned")
+            item = gtk.ImageMenuItem(_("Remove from TaskTray."))
+            item.get_image().set_from_stock(
+                gtk.STOCK_REMOVE, gtk.ICON_SIZE_MENU
+            )
+            item.connect("activate", unpin)
+            menu.prepend(item)
+        menu.prepend(gtk.SeparatorMenuItem())
+        if self.__app.help_dir is not None:
             item = gtk.ImageMenuItem(gtk.STOCK_HELP)
             menu.prepend(item)
             item.connect("activate", self.__show_help)
-        for option in self.__app_options:
-            item = gtk.ImageMenuItem(option.get('label'))
-            if 'option' in option:
-                item.connect(
-                    "activate", self.__run_with_option, option.get('option')
-                )
-            elif 'exec' in option:
-                item.connect(
-                    "activate", self.__run_desktop_option, option.get('exec')
-                )
-            stock_id = option.get('icon')
+        for option in self.__app.options:
+            item = gtk.ImageMenuItem(option.label)
+            item.connect("activate", self.__exec_option, option)
+            stock_id = option.stock_icon
             if stock_id:
                 item.get_image().set_from_stock(stock_id, gtk.ICON_SIZE_MENU)
             menu.prepend(item)
         return menu
     
     def get_icons(self):
-        if self.__icon_name is not None:
-            icons = [ThemedIcon(self.__icon_name)]
+        if self.__app is not None and self.__app.icon_name is not None:
+            icons = [ThemedIcon(self.__app.icon_name)]
         else:
             icons = []
         if self.__appitem_config.themed_icons:
@@ -219,10 +202,11 @@ class AppItem(AWindowsItem):
                 if app is None or app.get_icon_is_fallback():
                     continue
                 icon_names.add(app.get_icon_name())
-            icon_names = list(icon_names) + [
-                self.__class_group.get_name().lower(),
-                self.__class_group.get_res_class().lower()
-            ]
+            if self.__class_group is not None:
+                icon_names = list(icon_names) + [
+                    self.__class_group.get_name().lower(),
+                    self.__class_group.get_res_class().lower()
+                ]
             icons += [ThemedIcon(icon_name) for icon_name in icon_names]
         for window_item in self.visible_window_items:
             app = window_item.window.get_application()
@@ -235,24 +219,36 @@ class AppItem(AWindowsItem):
     def is_visible(self):
         return (
             not self.__screen.get_showing_desktop() and
-            AWindowsItem.is_visible(self)
+            AWindowsItem.is_visible(self) or self.__pinned
         )
+
+    def is_greyed_out(self):
+        if self.__class_group is None:
+            return True
+        return AWindowsItem.is_greyed_out(self)
+
+    def get_zoom(self):
+        if self.__class_group is None:
+            return 1.0
+        return AWindowsItem.get_zoom(self)
 
     def get_name(self):
         visible_window_items = self.visible_window_items
+        if not visible_window_items:
+            return self.get_base_name()
         if len(visible_window_items) == 1:
             return visible_window_items[0].get_name()
         return AWindowsItem.get_name(self)
 
     def get_drag_source_targets(self):
-        if self.__desktop_file is None and self.__app_dir is None:
+        if self.__app is None:
             return AWindowsItem.get_drag_source_targets(self)
         return AWindowsItem.get_drag_source_targets(self) + [
             ("text/uri-list", 0, TARGET_URI_LIST)
         ]
 
     def get_drag_source_actions(self):
-        if self.__desktop_file is None and self.__app_dir is None:
+        if self.__app is None:
             return AWindowsItem.get_drag_source_actions(self)
         return (
             AWindowsItem.get_drag_source_actions(self) |
@@ -262,16 +258,45 @@ class AppItem(AWindowsItem):
     def drag_data_get(self, context, data, info, time):
         AWindowsItem.drag_data_get(self, context, data, info, time)
         if info == TARGET_URI_LIST:
-            paths = []
-            if self.__app_dir is not None:
-                paths.append(self.__app_dir)
-            if self.__desktop_file is not None:
-                paths.append(self.__desktop_file)
-            data.set_uris(['file://%s' % pathname2url(path) for path in paths])
+            if self.__app is not None:
+                data.set_uris(['file://%s' % pathname2url(self.__app.path)])
 
+    def click(self, time=0L):
+        visible_window_items = self.visible_window_items
+        if len(visible_window_items) == 0 and self.__app is not None:
+            self.__app.run()
+            return True
+        return AWindowsItem.click(self, time)
 
 
     # AWindowsItem implementation:
 
     def get_base_name(self):
-        return self.__class_group.get_name()
+        if self.__class_group is not None:
+            return self.__class_group.get_name()
+        if self.__app is not None:
+            return self.__app.name
+        return None
+
+    
+    # Properties:
+
+    @property
+    def app(self):
+        return self.__app
+
+    @property
+    def is_pinned(self):
+        """
+        C{True} if the item will stay in the tray even if its windows are
+        closed.
+        """
+        return self.__pinned
+
+
+gobject.signal_new(
+    "pinned", AppItem, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()
+)
+gobject.signal_new(
+    "unpinned", AppItem, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()
+)
