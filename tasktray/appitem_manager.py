@@ -20,7 +20,6 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
         )
 
     def save_pinned_items(item):
-        print("saving pinned items")
         pinned_items = []
         for item in tray.items:
             if item.app is not None and item.is_pinned:
@@ -65,6 +64,7 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
                 appitem.connect("pinned", save_pinned_items)
                 appitem.connect("unpinned", save_pinned_items)
                 tray.add_item(None, app.id, appitem)
+                yield None
         class_group2windows = {}
         for window in screen.get_windows():
             class_group = window.get_class_group()
@@ -74,7 +74,7 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
                 class_group2windows[class_group] = [window]
         for class_group in class_group2windows:
             class_group_opened(screen, class_group)
-        yield None
+            yield None
 
     def unmanage():
         yield None
