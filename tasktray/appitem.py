@@ -131,14 +131,16 @@ class AppItem(AWindowsItem):
                 self.__class_group.get_res_class(),
             ]
             for name in names:
-                self.__app = ROXApp.from_name(name)
-                if self.__app is not None:
-                    break
-            if self.__app is None:
-                for name in names:
-                    self.__app = DesktopApp.from_name(name)
+                parts = name.split('-')
+                for i in range(1, len(parts) + 1):
+                    name = '-'.join(parts[0 : i])
+                    self.__app = ROXApp.from_name(name)
+                    if self.__app is None:
+                        self.__app = DesktopApp.from_name(name)
                     if self.__app is not None:
                         break
+                if self.__app is not None:
+                    break
 
         self.emit("base-name-changed")
         self.emit("name-changed")
