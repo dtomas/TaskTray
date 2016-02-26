@@ -20,6 +20,7 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
         )
 
     def save_pinned_items(item):
+        print("saving pinned items")
         pinned_items = []
         for item in tray.items:
             if item.app is not None and item.is_pinned:
@@ -54,16 +55,17 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
                     app = DesktopApp(path)
                 except AppError:
                     continue
-                tray.add_item(
-                    None, app.id, AppItem(
-                        win_config,
-                        appitem_config,
-                        screen,
-                        class_group=None,
-                        app=app,
-                        pinned=True,
-                    )
+                appitem = AppItem(
+                    win_config,
+                    appitem_config,
+                    screen,
+                    class_group=None,
+                    app=app,
+                    pinned=True,
                 )
+                appitem.connect("pinned", save_pinned_items)
+                appitem.connect("unpinned", save_pinned_items)
+                tray.add_item(None, app.id, appitem)
         class_group2windows = {}
         for window in screen.get_windows():
             class_group = window.get_class_group()

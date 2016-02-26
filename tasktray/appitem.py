@@ -168,9 +168,9 @@ class AppItem(AWindowsItem):
         else:
             def unpin(item):
                 self.__pinned = False
+                self.emit("unpinned")
                 if self.__class_group is None:
                     self.destroy()
-                self.emit("unpinned")
             item = gtk.ImageMenuItem(_("Remove from TaskTray."))
             item.get_image().set_from_stock(
                 gtk.STOCK_REMOVE, gtk.ICON_SIZE_MENU
