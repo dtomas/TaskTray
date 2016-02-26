@@ -26,7 +26,7 @@ class TaskTrayMain(Main):
 
     def init_options(self):
         Main.init_options(self)
-        self.__o_all_workspaces = Option("all_workspaces", False)
+        self.__o_all_workspaces = Option("all_workspaces", True)
         self.__o_arrow = Option("arrow", True)
         self.__o_themed_icons = Option("themed_icons", False)
         
