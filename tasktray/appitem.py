@@ -112,33 +112,32 @@ class AppItem(AWindowsItem):
 
     # Private methods:
 
+    def __app_ids_from_class_group(self, class_group):
+        for name in [class_group.get_name(), class_group.get_res_class()]:
+            parts = name.split('-')
+            for i in range(1, len(parts) + 1):
+                name = '-'.join(parts[0 : i]) 
+                yield name
+                yield name.lower()
+
     def __update_class_group(self):
         if self.__class_group is None:
             class_groups = set()
             for window in self.__screen.get_windows():
                 class_groups.add(window.get_class_group())
             for class_group in class_groups:
-                if class_group.get_res_class().lower() == self.__app.id.lower():
-                    self.__class_group = class_group
-                    break
-                if class_group.get_name().lower() == self.__app.id.lower():
-                    self.__class_group = class_group
+                for app_id in self.__app_ids_from_class_group(class_group):
+                    if self.__app.id == app_id:
+                        self.__class_group = class_group
+                        break
+                if self.__class_group is not None:
                     break
 
         if self.__class_group is not None and self.__app is None:
-            names = [
-                self.__class_group.get_name(),
-                self.__class_group.get_res_class(),
-            ]
-            for name in names:
-                parts = name.split('-')
-                for i in range(1, len(parts) + 1):
-                    name = '-'.join(parts[0 : i])
-                    self.__app = ROXApp.from_name(name)
-                    if self.__app is None:
-                        self.__app = DesktopApp.from_name(name)
-                    if self.__app is not None:
-                        break
+            for name in self.__app_ids_from_class_group(self.__class_group):
+                self.__app = ROXApp.from_name(name)
+                if self.__app is None:
+                    self.__app = DesktopApp.from_name(name)
                 if self.__app is not None:
                     break
 
