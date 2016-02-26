@@ -76,6 +76,8 @@ class AppItem(AWindowsItem):
         self.emit("zoom-changed")
 
     def offer_class_group(self, class_group):
+        if self.__class_group is not None:
+            return self.__class_group is class_group
         self.__update_class_group()
         return class_group is self.__class_group
 
@@ -121,7 +123,7 @@ class AppItem(AWindowsItem):
                 yield name.lower()
 
     def __update_class_group(self):
-        if self.__class_group is None:
+        if self.__class_group is None and self.__app is not None:
             class_groups = set()
             for window in self.__screen.get_windows():
                 class_groups.add(window.get_class_group())
@@ -132,8 +134,7 @@ class AppItem(AWindowsItem):
                         break
                 if self.__class_group is not None:
                     break
-
-        if self.__class_group is not None and self.__app is None:
+        elif self.__class_group is not None and self.__app is None:
             for name in self.__app_ids_from_class_group(self.__class_group):
                 self.__app = ROXApp.from_name(name)
                 if self.__app is None:
