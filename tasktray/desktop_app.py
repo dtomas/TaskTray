@@ -100,14 +100,16 @@ class DesktopApp(object):
 
     @staticmethod
     def from_name(appname):
+        appname = appname.lower()
         for datadir in xdg_data_dirs:
             applications_dir = os.path.join(datadir, "applications")
-            for leafname in appname, appname.lower(), appname.capitalize():
-                desktop_file = os.path.join(
-                    applications_dir, leafname + ".desktop"
-                )
-                try:
-                    return DesktopApp(desktop_file)
-                except AppError:
-                    continue
+            if not os.path.isdir(applications_dir):
+                continue
+            filenames = os.listdir(applications_dir)
+            for leafname in filenames:
+                if os.path.splitext(leafname)[0].lower() == appname:
+                    return DesktopApp(os.path.join(applications_dir, leafname))
+            for leafname in filenames:
+                if os.path.splitext(leafname)[0].lower().startswith(appname):
+                    return DesktopApp(os.path.join(applications_dir, leafname))
         return None
