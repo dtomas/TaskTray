@@ -4,7 +4,7 @@ from ConfigParser import RawConfigParser, NoOptionError
 
 from rox.basedir import xdg_data_dirs
 
-from traylib.icons import ThemedIcon
+from traylib.icons import ThemedIcon, FileIcon
 
 from tasktray.app import AppError, AppAction
 
@@ -86,7 +86,10 @@ class DesktopApp(object):
 
     @property
     def icons(self):
-        return [ThemedIcon(self.__icon_name)]
+        if os.path.isabs(self.__icon_name):
+            return [FileIcon(self.__icon_name)]
+        else:
+            return [ThemedIcon(self.__icon_name)]
 
     def run(self):
         command = [
