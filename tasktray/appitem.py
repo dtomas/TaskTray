@@ -160,20 +160,20 @@ class AppItem(AWindowsItem):
                     if self.__desktop_file is not None:
                         break
 
-            if self.__desktop_file is not None:
-                parser = SafeConfigParser()
-                parser.read([self.__desktop_file])
-                try:
-                    self.__icon_name = parser.get("Desktop Entry", "Icon")
-                except NoOptionError:
-                    pass
-                for section in parser.sections():
-                    if not section.startswith("Desktop Action"):
-                        continue
-                    self.__app_options.append({
-                        "label": parser.get(section, "Name"),
-                        "exec": parser.get(section, "Exec"),
-                    })
+        if self.__desktop_file is not None:
+            parser = SafeConfigParser()
+            parser.read([self.__desktop_file])
+            try:
+                self.__icon_name = parser.get("Desktop Entry", "Icon")
+            except NoOptionError:
+                pass
+            for section in parser.sections():
+                if not section.startswith("Desktop Action"):
+                    continue
+                self.__app_options.append({
+                    "label": parser.get(section, "Name"),
+                    "exec": parser.get(section, "Exec"),
+                })
 
 
     # Item implementation:
