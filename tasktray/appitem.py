@@ -101,6 +101,9 @@ class AppItem(AWindowsItem):
             (os.path.join(self.__app_dir, 'AppRun'), option), None, None
         ).start()
 
+    def __run_desktop_option(self, menu_item, exec_):
+        processes.PipeThroughCommand(exec_.split(' '), None, None).start()
+
 
     # Private methods:
 
@@ -159,6 +162,13 @@ class AppItem(AWindowsItem):
             parser = SafeConfigParser()
             parser.read([self.__desktop_file])
             self.__icon_name = parser.get("Desktop Entry", "Icon")
+            for section in parser.sections():
+                if not section.startswith("Desktop Action"):
+                    continue
+                self.__app_options.append({
+                    "label": parser.get(section, "Name"),
+                    "exec": parser.get(section, "Exec"),
+                })
 
 
     # Item implementation:
@@ -178,9 +188,14 @@ class AppItem(AWindowsItem):
             item.connect("activate", self.__show_help)
         for option in self.__app_options:
             item = gtk.ImageMenuItem(option.get('label'))
-            item.connect(
-                "activate", self.__run_with_option, option.get('option')
-            )
+            if 'option' in option:
+                item.connect(
+                    "activate", self.__run_with_option, option.get('option')
+                )
+            elif 'exec' in option:
+                item.connect(
+                    "activate", self.__run_desktop_option, option.get('exec')
+                )
             stock_id = option.get('icon')
             if stock_id:
                 item.get_image().set_from_stock(stock_id, gtk.ICON_SIZE_MENU)
