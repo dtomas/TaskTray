@@ -1,12 +1,14 @@
 import os
 
 import gtk
+from ConfigParser import SafeConfigParser
+from urllib import pathname2url
 
 import rox
 from rox import AppInfo, processes, filer
 from rox.basedir import xdg_data_dirs
 
-from traylib import APPDIRPATH
+from traylib import APPDIRPATH, TARGET_URI_LIST
 from traylib.winitem import AWindowsItem
 from traylib.icons import ThemedIcon, PixbufIcon
 
@@ -78,6 +80,7 @@ class AppItem(AWindowsItem):
         self.emit("base-name-changed")
         self.emit("icon-changed")
         self.emit("menu-right-changed")
+        self.emit("drag-source-changed")
 
     def __window_opened(self, screen, window):
         if window.get_class_group() is self.__class_group:
@@ -105,19 +108,21 @@ class AppItem(AWindowsItem):
         self.__app_dir = None
         self.__help_dir = None
         self.__app_options = []
+        self.__desktop_file = None
+        self.__icon_name = None
 
-        dirname = self.__class_group.get_name()
-        if not dirname:
+        appname = self.__class_group.get_name()
+        if not appname:
             return
 
         for path in APPDIRPATH:
             if not path:
                 continue
-            app_dir = os.path.join(path, dirname)
+            app_dir = os.path.join(path, appname)
             if not os.path.isdir(app_dir):
-                app_dir = os.path.join(path, dirname.capitalize())
+                app_dir = os.path.join(path, appname.capitalize())
             if not os.path.isdir(app_dir):
-                app_dir = os.path.join(path, dirname.upper())
+                app_dir = os.path.join(path, appname.upper())
             if rox.isappdir(app_dir):
                 self.__app_dir = app_dir
                 help_dir = os.path.join(app_dir, 'Help')
@@ -132,10 +137,28 @@ class AppItem(AWindowsItem):
 
         if not self.__help_dir:
             for datadir in xdg_data_dirs:
-                help_dir = os.path.join(datadir, 'doc', dirname.lower())
+                help_dir = os.path.join(datadir, 'doc', appname.lower())
                 if os.path.isdir(help_dir):
                     self.__help_dir = help_dir
                     break
+
+        if not self.__app_dir:
+            for datadir in xdg_data_dirs:
+                applications_dir = os.path.join(datadir, "applications")
+                for leafname in appname, appname.lower(), appname.capitalize():
+                    desktop_file = os.path.join(
+                        applications_dir, leafname + ".desktop"
+                    )
+                    if os.path.exists(desktop_file):
+                        self.__desktop_file = desktop_file
+                        break
+                if self.__desktop_file is not None:
+                    break
+
+        if self.__desktop_file is not None:
+            parser = SafeConfigParser()
+            parser.read([self.__desktop_file])
+            self.__icon_name = parser.get("Desktop Entry", "Icon")
 
 
     # Item implementation:
@@ -165,6 +188,10 @@ class AppItem(AWindowsItem):
         return menu
     
     def get_icons(self):
+        if self.__icon_name is not None:
+            icons = [ThemedIcon(self.__icon_name)]
+        else:
+            icons = []
         if self.__appitem_config.themed_icons:
             icon_names = set()
             for window_item in self.visible_window_items:
@@ -176,9 +203,7 @@ class AppItem(AWindowsItem):
                 self.__class_group.get_name().lower(),
                 self.__class_group.get_res_class().lower()
             ]
-            icons = [ThemedIcon(icon_name) for icon_name in icon_names]
-        else:
-            icons = []
+            icons += [ThemedIcon(icon_name) for icon_name in icon_names]
         for window_item in self.visible_window_items:
             app = window_item.window.get_application()
             if app is None or app.get_icon_is_fallback():
@@ -198,6 +223,32 @@ class AppItem(AWindowsItem):
         if len(visible_window_items) == 1:
             return visible_window_items[0].get_name()
         return AWindowsItem.get_name(self)
+
+    def get_drag_source_targets(self):
+        if self.__desktop_file is None and self.__app_dir is None:
+            return AWindowsItem.get_drag_source_targets(self)
+        return AWindowsItem.get_drag_source_targets(self) + [
+            ("text/uri-list", 0, TARGET_URI_LIST)
+        ]
+
+    def get_drag_source_actions(self):
+        if self.__desktop_file is None and self.__app_dir is None:
+            return AWindowsItem.get_drag_source_actions(self)
+        return (
+            AWindowsItem.get_drag_source_actions(self) |
+            gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_LINK
+        )
+
+    def drag_data_get(self, context, data, info, time):
+        AWindowsItem.drag_data_get(self, context, data, info, time)
+        if info == TARGET_URI_LIST:
+            paths = []
+            if self.__app_dir is not None:
+                paths.append(self.__app_dir)
+            if self.__desktop_file is not None:
+                paths.append(self.__desktop_file)
+            data.set_uris(['file://%s' % pathname2url(path) for path in paths])
+
 
 
     # AWindowsItem implementation:
