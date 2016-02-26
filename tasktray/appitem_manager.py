@@ -46,6 +46,7 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
             with open(pinned_items_path, "r") as f:
                 pinned_items = json.load(f)
             for path in pinned_items:
+                yield None
                 try:
                     app = ROXApp(path)
                 except AppError:
@@ -64,7 +65,6 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
                 appitem.connect("pinned", save_pinned_items)
                 appitem.connect("unpinned", save_pinned_items)
                 tray.add_item(None, app.id, appitem)
-                yield None
         class_group2windows = {}
         for window in screen.get_windows():
             class_group = window.get_class_group()
