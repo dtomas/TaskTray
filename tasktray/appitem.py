@@ -141,6 +141,7 @@ class AppItem(AWindowsItem):
         self.emit("name-changed")
         self.emit("is-greyed-out-changed")
         self.emit("zoom-changed")
+        self.emit("has-arrow-changed")
 
 
     # Item implementation:
@@ -216,6 +217,9 @@ class AppItem(AWindowsItem):
             icons.append(PixbufIcon(app.get_icon()))
             break
         return icons
+
+    def has_arrow(self):
+        return self.__class_group is not None
 
     def is_visible(self):
         return (
