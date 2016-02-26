@@ -43,8 +43,7 @@ class AppItem(AWindowsItem):
         ]
 
         for window in screen.get_windows():
-            if window.get_class_group() is self.__class_group:
-                self.__window_opened(screen, window)
+            self.__window_opened(screen, window)
 
         self.connect(
             "visible-window-items-changed", self.__visible_window_items_changed
@@ -91,7 +90,8 @@ class AppItem(AWindowsItem):
         self.emit("icon-changed")
 
     def __window_opened(self, screen, window):
-        if window.get_class_group() is self.__class_group:
+        if (self.__class_group is not None and
+                window.get_class_group() is self.__class_group):
             self.add_window(window)
 
     def __window_closed(self, screen, window):
