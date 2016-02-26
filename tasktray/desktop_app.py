@@ -1,7 +1,7 @@
 import os
+import subprocess
 from ConfigParser import RawConfigParser, NoOptionError
 
-from rox import processes
 from rox.basedir import xdg_data_dirs
 
 from traylib.icons import ThemedIcon
@@ -87,13 +87,11 @@ class DesktopApp(object):
         return [ThemedIcon(self.__icon_name)]
 
     def run(self):
-        print("run")
-        print(self.__exec)
         command = [
             arg for arg in self.__exec.split(' ')
             if arg not in {"%f", "%F", "%u", "%U"}
         ]
-        processes.PipeThroughCommand(command, None, None).start()
+        subprocess.Popen(command)
 
     @staticmethod
     def from_name(appname):

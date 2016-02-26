@@ -1,7 +1,8 @@
 import os
+import subprocess
 
 import rox
-from rox import AppInfo, processes, filer
+from rox import AppInfo, filer
 
 from traylib import APPDIRPATH
 from traylib.icons import FileIcon
@@ -59,7 +60,7 @@ class ROXApp(object):
         return [FileIcon(self.__dir_icon)]
 
     def run(self):
-        processes.PipeThroughCommand([self.__app_run], None, None).start()
+        subprocess.Popen([self.__app_run])
 
     @staticmethod
     def from_name(appname):

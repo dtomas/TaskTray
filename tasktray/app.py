@@ -1,4 +1,4 @@
-from rox import processes
+import subprocess
 
 
 class AppAction(object):
@@ -9,7 +9,7 @@ class AppAction(object):
         self.stock_icon = stock_icon
 
     def execute(self):
-        processes.PipeThroughCommand(self.command, None, None).start()
+        subprocess.Popen(self.command)
         
 
 class AppError(Exception):
