@@ -158,7 +158,7 @@ class AppItem(AWindowsItem):
             def pin(item):
                 self.__pinned = True
                 self.emit("pinned")
-            item = gtk.ImageMenuItem(_("Premanently add to TaskTray."))
+            item = gtk.ImageMenuItem(_("Permanently add to TaskTray."))
             item.get_image().set_from_stock(
                 gtk.STOCK_ADD, gtk.ICON_SIZE_MENU
             )
