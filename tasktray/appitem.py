@@ -71,6 +71,9 @@ class AppItem(AWindowsItem):
     def __visible_window_items_changed(self, item):
         self.emit("icon-changed")
         self.emit("name-changed")
+        self.emit("is-greyed-out-changed")
+        self.emit("has-arrow-changed")
+        self.emit("zoom-changed")
 
     def offer_class_group(self, class_group):
         self.__update_class_group()
@@ -139,9 +142,7 @@ class AppItem(AWindowsItem):
 
         self.emit("base-name-changed")
         self.emit("name-changed")
-        self.emit("is-greyed-out-changed")
         self.emit("zoom-changed")
-        self.emit("has-arrow-changed")
 
 
     # Item implementation:
@@ -158,6 +159,7 @@ class AppItem(AWindowsItem):
         if not self.__pinned:
             def pin(item):
                 self.__pinned = True
+                self.emit("is-visible-changed")
                 self.emit("pinned")
             item = gtk.ImageMenuItem(_("Permanently add to TaskTray."))
             item.get_image().set_from_stock(
@@ -168,6 +170,7 @@ class AppItem(AWindowsItem):
         else:
             def unpin(item):
                 self.__pinned = False
+                self.emit("is-visible-changed")
                 self.emit("unpinned")
                 if self.__class_group is None:
                     self.destroy()
@@ -219,7 +222,7 @@ class AppItem(AWindowsItem):
         return icons
 
     def has_arrow(self):
-        return self.__class_group is not None
+        return bool(self.visible_window_items)
 
     def is_visible(self):
         return (
@@ -228,12 +231,12 @@ class AppItem(AWindowsItem):
         )
 
     def is_greyed_out(self):
-        if self.__class_group is None:
+        if not self.visible_window_items:
             return True
         return AWindowsItem.is_greyed_out(self)
 
     def get_zoom(self):
-        if self.__class_group is None:
+        if not self.visible_window_items:
             return 1.0
         return AWindowsItem.get_zoom(self)
 
