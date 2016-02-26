@@ -64,16 +64,14 @@ class ROXApp(object):
 
     @staticmethod
     def from_name(appname):
+        appnames = [appname, appname.capitalize(), appname.upper()]
         for path in APPDIRPATH:
-            if not path:
+            if not path or not os.path.isdir(path):
                 continue
-            app_dir = os.path.join(path, appname)
-            if not os.path.isdir(app_dir):
-                app_dir = os.path.join(path, appname.capitalize())
-            if not os.path.isdir(app_dir):
-                app_dir = os.path.join(path, appname.upper())
-            try:
-                return ROXApp(app_dir)
-            except AppError:
-                continue
+            for appname in appnames:
+                app_dir = os.path.join(path, appname)
+                try:
+                    return ROXApp(app_dir)
+                except AppError:
+                    pass
         return None
