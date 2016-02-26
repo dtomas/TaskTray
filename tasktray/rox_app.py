@@ -4,6 +4,7 @@ import rox
 from rox import AppInfo, processes, filer
 
 from traylib import APPDIRPATH
+from traylib.icons import FileIcon
 
 from tasktray.app import AppError, AppAction
 
@@ -19,6 +20,7 @@ class ROXApp(object):
             self.__help_dir = help_dir
         self.__name = os.path.basename(app_dir)
         self.__app_run = os.path.join(app_dir, 'AppRun')
+        self.__dir_icon = os.path.join(app_dir, '.DirIcon')
         app_info = os.path.join(app_dir, 'AppInfo.xml')
         if os.access(app_info, os.R_OK):
             self.__app_options = [
@@ -52,7 +54,9 @@ class ROXApp(object):
     def options(self):
         return self.__app_options
 
-    icon_name = None
+    @property
+    def icons(self):
+        return [FileIcon(self.__dir_icon)]
 
     def run(self):
         processes.PipeThroughCommand([self.__app_run], None, None).start()

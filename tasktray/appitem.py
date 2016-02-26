@@ -193,8 +193,8 @@ class AppItem(AWindowsItem):
         return menu
     
     def get_icons(self):
-        if self.__app is not None and self.__app.icon_name is not None:
-            icons = [ThemedIcon(self.__app.icon_name)]
+        if self.__app is not None and self.__app.icons:
+            icons = self.__app.icons
         else:
             icons = []
         if self.__appitem_config.themed_icons:

@@ -50,11 +50,10 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
                 try:
                     app = ROXApp(path)
                 except AppError:
-                    pass
-                try:
-                    app = DesktopApp(path)
-                except AppError:
-                    continue
+                    try:
+                        app = DesktopApp(path)
+                    except AppError:
+                        continue
                 appitem = AppItem(
                     win_config,
                     appitem_config,

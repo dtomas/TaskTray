@@ -1,10 +1,12 @@
 import os
 from ConfigParser import RawConfigParser, NoOptionError
 
-from tasktray.app import AppError, AppAction
-
 from rox import processes
 from rox.basedir import xdg_data_dirs
+
+from traylib.icons import ThemedIcon
+
+from tasktray.app import AppError, AppAction
 
 
 class DesktopApp(object):
@@ -18,10 +20,6 @@ class DesktopApp(object):
             self.__exec = parser.get("Desktop Entry", "Exec")
         except NoOptionError:
             raise AppError("No Exec entry in .desktop file %s." % desktop_file)
-        self.__exec = self.__exec.replace("%F", "")
-        self.__exec = self.__exec.replace("%f", "")
-        self.__exec = self.__exec.replace("%U", "")
-        self.__exec = self.__exec.replace("%u", "")
         self.__id = os.path.splitext(os.path.basename(desktop_file))[0]
         try:
             self.__name = parser.get("Desktop Entry", "Name")
@@ -85,11 +83,17 @@ class DesktopApp(object):
         return self.__app_options
 
     @property
-    def icon_name(self):
-        return self.__icon_name
+    def icons(self):
+        return [ThemedIcon(self.__icon_name)]
 
     def run(self):
-        processes.PipeThroughCommand(self.__exec.split(' '), None, None).start()
+        print("run")
+        print(self.__exec)
+        command = [
+            arg for arg in self.__exec.split(' ')
+            if arg not in {"%f", "%F", "%u", "%U"}
+        ]
+        processes.PipeThroughCommand(command, None, None).start()
 
     @staticmethod
     def from_name(appname):
