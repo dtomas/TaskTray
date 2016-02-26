@@ -1,7 +1,7 @@
 import os
 
 import gtk
-from ConfigParser import SafeConfigParser
+from ConfigParser import SafeConfigParser, NoOptionError
 from urllib import pathname2url
 
 import rox
@@ -114,61 +114,66 @@ class AppItem(AWindowsItem):
         self.__desktop_file = None
         self.__icon_name = None
 
-        appname = self.__class_group.get_name()
-        if not appname:
-            return
+        appnames = (
+            self.__class_group.get_name(), self.__class_group.get_res_class()
+        )
 
-        for path in APPDIRPATH:
-            if not path:
-                continue
-            app_dir = os.path.join(path, appname)
-            if not os.path.isdir(app_dir):
-                app_dir = os.path.join(path, appname.capitalize())
-            if not os.path.isdir(app_dir):
-                app_dir = os.path.join(path, appname.upper())
-            if rox.isappdir(app_dir):
-                self.__app_dir = app_dir
-                help_dir = os.path.join(app_dir, 'Help')
-                if os.path.isdir(help_dir):
-                    self.__help_dir = help_dir
-                app_info = os.path.join(app_dir, 'AppInfo.xml')
-                if os.access(app_info, os.R_OK):
-                    self.__app_options = (
-                        AppInfo.AppInfo(app_info).getAppMenu()
-                    )
-                    break
+        for appname in appnames:
+            if self.__app_dir is None:
+                for path in APPDIRPATH:
+                    if not path:
+                        continue
+                    app_dir = os.path.join(path, appname)
+                    if not os.path.isdir(app_dir):
+                        app_dir = os.path.join(path, appname.capitalize())
+                    if not os.path.isdir(app_dir):
+                        app_dir = os.path.join(path, appname.upper())
+                    if rox.isappdir(app_dir):
+                        self.__app_dir = app_dir
+                        help_dir = os.path.join(app_dir, 'Help')
+                        if os.path.isdir(help_dir):
+                            self.__help_dir = help_dir
+                        app_info = os.path.join(app_dir, 'AppInfo.xml')
+                        if os.access(app_info, os.R_OK):
+                            self.__app_options = (
+                                AppInfo.AppInfo(app_info).getAppMenu()
+                            )
+                            break
 
-        if not self.__help_dir:
-            for datadir in xdg_data_dirs:
-                help_dir = os.path.join(datadir, 'doc', appname.lower())
-                if os.path.isdir(help_dir):
-                    self.__help_dir = help_dir
-                    break
-
-        if not self.__app_dir:
-            for datadir in xdg_data_dirs:
-                applications_dir = os.path.join(datadir, "applications")
-                for leafname in appname, appname.lower(), appname.capitalize():
-                    desktop_file = os.path.join(
-                        applications_dir, leafname + ".desktop"
-                    )
-                    if os.path.exists(desktop_file):
-                        self.__desktop_file = desktop_file
+            if self.__help_dir is None:
+                for datadir in xdg_data_dirs:
+                    help_dir = os.path.join(datadir, 'doc', appname.lower())
+                    if os.path.isdir(help_dir):
+                        self.__help_dir = help_dir
                         break
-                if self.__desktop_file is not None:
-                    break
 
-        if self.__desktop_file is not None:
-            parser = SafeConfigParser()
-            parser.read([self.__desktop_file])
-            self.__icon_name = parser.get("Desktop Entry", "Icon")
-            for section in parser.sections():
-                if not section.startswith("Desktop Action"):
-                    continue
-                self.__app_options.append({
-                    "label": parser.get(section, "Name"),
-                    "exec": parser.get(section, "Exec"),
-                })
+            if self.__app_dir is None and self.__desktop_file is None:
+                for datadir in xdg_data_dirs:
+                    applications_dir = os.path.join(datadir, "applications")
+                    for leafname in appname, appname.lower(), appname.capitalize():
+                        desktop_file = os.path.join(
+                            applications_dir, leafname + ".desktop"
+                        )
+                        if os.path.exists(desktop_file):
+                            self.__desktop_file = desktop_file
+                            break
+                    if self.__desktop_file is not None:
+                        break
+
+            if self.__desktop_file is not None:
+                parser = SafeConfigParser()
+                parser.read([self.__desktop_file])
+                try:
+                    self.__icon_name = parser.get("Desktop Entry", "Icon")
+                except NoOptionError:
+                    pass
+                for section in parser.sections():
+                    if not section.startswith("Desktop Action"):
+                        continue
+                    self.__app_options.append({
+                        "label": parser.get(section, "Name"),
+                        "exec": parser.get(section, "Exec"),
+                    })
 
 
     # Item implementation:
