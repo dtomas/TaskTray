@@ -60,7 +60,9 @@ class DesktopApp(object):
                 icon_name = parser.get(section, "Icon")
             except NoOptionError:
                 icon_name = None
-            self.__app_options.append(AppAction(name, exec_, icon_name))
+            self.__app_options.append(
+                AppAction(name, exec_.split(' '), icon_name)
+            )
 
     @property
     def help_dir(self):
