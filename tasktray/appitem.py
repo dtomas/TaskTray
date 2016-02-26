@@ -176,7 +176,8 @@ class AppItem(AWindowsItem):
             )
             item.connect("activate", unpin)
             menu.prepend(item)
-        menu.prepend(gtk.SeparatorMenuItem())
+        if self.__app.help_dir or self.__app.options:
+            menu.prepend(gtk.SeparatorMenuItem())
         if self.__app.help_dir is not None:
             item = gtk.ImageMenuItem(gtk.STOCK_HELP)
             menu.prepend(item)
