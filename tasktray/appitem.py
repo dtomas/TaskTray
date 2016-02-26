@@ -141,6 +141,8 @@ class AppItem(AWindowsItem):
                     self.__app = DesktopApp.from_name(name)
                 if self.__app is not None:
                     break
+        else:
+            return
 
         self.emit("base-name-changed")
         self.emit("name-changed")
@@ -163,7 +165,7 @@ class AppItem(AWindowsItem):
                 self.__pinned = True
                 self.emit("is-visible-changed")
                 self.emit("pinned")
-            item = gtk.ImageMenuItem(_("Permanently add to TaskTray."))
+            item = gtk.ImageMenuItem(_("Permanently add to TaskTray"))
             item.get_image().set_from_stock(
                 gtk.STOCK_ADD, gtk.ICON_SIZE_MENU
             )
@@ -176,7 +178,7 @@ class AppItem(AWindowsItem):
                 self.emit("unpinned")
                 if self.__class_group is None:
                     self.destroy()
-            item = gtk.ImageMenuItem(_("Remove from TaskTray."))
+            item = gtk.ImageMenuItem(_("Remove from TaskTray"))
             item.get_image().set_from_stock(
                 gtk.STOCK_REMOVE, gtk.ICON_SIZE_MENU
             )
