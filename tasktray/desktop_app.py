@@ -1,4 +1,5 @@
 import os
+import locale
 import subprocess
 from ConfigParser import RawConfigParser, NoOptionError
 
@@ -16,27 +17,24 @@ class DesktopApp(object):
             raise AppError("Desktop file %s does not exist." % desktop_file)
         parser = RawConfigParser()
         parser.read(desktop_file)
+        lang = locale.getdefaultlocale()[0].split('_')[0]
         try:
             self.__exec = parser.get("Desktop Entry", "Exec")
         except NoOptionError:
             raise AppError("No Exec entry in .desktop file %s." % desktop_file)
         self.__id = os.path.splitext(os.path.basename(desktop_file))[0]
+        self.__name = self.__id
         try:
-            self.__name = parser.get("Desktop Entry", "Name")
+            self.__name = parser.get("Desktop Entry", "Name[%s]" % lang)
         except NoOptionError:
-            self.__name = self.__id
+            try:
+                self.__name = parser.get("Desktop Entry", "Name")
+            except NoOptionError:
+                pass
         try:
             self.__icon_name = parser.get("Desktop Entry", "Icon")
         except NoOptionError:
             self.__icon_name = None
-        self.__app_options = []
-        for section in parser.sections():
-            if not section.startswith("Desktop Action"):
-                continue
-            self.__app_options.append({
-                "label": parser.get(section, "Name"),
-                "exec": parser.get(section, "Exec"),
-            })
         self.__path = desktop_file
         self.__help_dir = None
         for datadir in xdg_data_dirs:
@@ -49,9 +47,12 @@ class DesktopApp(object):
             if not section.startswith("Desktop Action"):
                 continue
             try:
-                name = parser.get(section, "Name")
+                name = parser.get(section, "Name[%s]" % lang)
             except NoOptionError:
-                continue
+                try:
+                    name = parser.get(section, "Name")
+                except NoOptionError:
+                    continue
             try:
                 exec_ = parser.get(section, "Exec")
             except NoOptionError:
