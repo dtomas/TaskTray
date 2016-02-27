@@ -151,11 +151,27 @@ class AppItem(AWindowsItem):
 
     # Item implementation:
 
+    def get_menu_left(self):
+        menu = AWindowsItem.get_menu_left(self)
+        if self.__app is None:
+            return menu
+
+        if menu is None:
+            return None
+        menu.append(gtk.SeparatorMenuItem())
+
+        def run(item):
+            self.app.run()
+        item = gtk.ImageMenuItem(gtk.STOCK_EXECUTE)
+        item.connect("activate", run)
+        menu.append(item)
+        return menu
+
     def get_menu_right(self):
         menu = AWindowsItem.get_menu_right(self)
         if self.__app is None:
             return menu
-        if not menu:
+        if menu is None:
             menu = gtk.Menu()
         else:
             menu.prepend(gtk.SeparatorMenuItem())
@@ -197,6 +213,13 @@ class AppItem(AWindowsItem):
             if stock_id:
                 item.get_image().set_from_stock(stock_id, gtk.ICON_SIZE_MENU)
             menu.prepend(item)
+        menu.prepend(gtk.SeparatorMenuItem())
+
+        def run(item):
+            self.app.run()
+        item = gtk.ImageMenuItem(gtk.STOCK_EXECUTE)
+        item.connect("activate", run)
+        menu.prepend(item)
         return menu
     
     def get_icons(self):
