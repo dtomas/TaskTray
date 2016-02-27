@@ -33,14 +33,12 @@ msgid "Click to show the desktop.\n"
 msgstr ""
 
 #: tasktray/main_item.py:63
-#, fuzzy
 msgid "Scroll down to only show windows of this workspace."
-msgstr "Показывать все рабочие места"
+msgstr ""
 
 #: tasktray/main_item.py:65
-#, fuzzy
 msgid "Scroll up to show windows of all workspaces."
-msgstr "Показывать все рабочие места"
+msgstr ""
 
 #: tipsH:1 tipsV:1
 msgid "Behaviour"
