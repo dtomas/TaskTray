@@ -261,7 +261,7 @@ class AppItem(AWindowsItem):
 
     def is_greyed_out(self):
         if not self.visible_window_items:
-            return True
+            return not self.__pinned
         return AWindowsItem.is_greyed_out(self)
 
     def get_zoom(self):
