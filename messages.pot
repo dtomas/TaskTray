@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-03-27 18:25+CET\n"
+"POT-Creation-Date: 2016-02-27 01:22+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,6 +14,32 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
+
+#: tasktray/appitem.py:168
+msgid "Pin to TaskTray"
+msgstr ""
+
+#: tasktray/appitem.py:181
+msgid "Remove from TaskTray"
+msgstr ""
+
+#: tasktray/main_item.py:59
+msgid ""
+"Click to show windows.\n"
+msgstr ""
+
+#: tasktray/main_item.py:61
+msgid ""
+"Click to show the desktop.\n"
+msgstr ""
+
+#: tasktray/main_item.py:63
+msgid "Scroll down to only show windows of this workspace."
+msgstr ""
+
+#: tasktray/main_item.py:65
+msgid "Scroll up to show windows of all workspaces."
+msgstr ""
 
 #: tipsH:1 tipsV:1
 msgid "Behaviour"

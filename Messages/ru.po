@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TaskTray 0.6\n"
-"POT-Creation-Date: 2015-03-27 18:25+CET\n"
+"POT-Creation-Date: 2016-02-27 01:22+CET\n"
 "PO-Revision-Date: 2007-07-02 20:04+EEST\n"
 "Last-Translator: Konstantin Korikov <lostclus@ua.fm>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,6 +15,32 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
+
+#: tasktray/appitem.py:168
+msgid "Pin to TaskTray"
+msgstr ""
+
+#: tasktray/appitem.py:181
+msgid "Remove from TaskTray"
+msgstr ""
+
+#: tasktray/main_item.py:59
+msgid "Click to show windows.\n"
+msgstr ""
+
+#: tasktray/main_item.py:61
+msgid "Click to show the desktop.\n"
+msgstr ""
+
+#: tasktray/main_item.py:63
+#, fuzzy
+msgid "Scroll down to only show windows of this workspace."
+msgstr "Показывать все рабочие места"
+
+#: tasktray/main_item.py:65
+#, fuzzy
+msgid "Scroll up to show windows of all workspaces."
+msgstr "Показывать все рабочие места"
 
 #: tipsH:1 tipsV:1
 msgid "Behaviour"
@@ -71,10 +97,6 @@ msgstr "Вверху"
 #: tipsV:6 tipsV:9
 msgid "Bottom"
 msgstr "Внизу"
-
-#, fuzzy
-#~ msgid "Scroll up to show windows of all workspaces."
-#~ msgstr "Показывать все рабочие места"
 
 #~ msgid "Left and right"
 #~ msgstr "Слева и справа"

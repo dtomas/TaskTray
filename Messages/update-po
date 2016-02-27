@@ -4,7 +4,7 @@ echo Extracting messages from source files...
 echo
 
 python ./make_tips
-(cd ..; pygettext AppRun *.py tipsV tipsH)
+(cd ..; pygettext AppRun tasktray/*.py tipsV tipsH)
 
 echo
 echo Updating all .po files...
