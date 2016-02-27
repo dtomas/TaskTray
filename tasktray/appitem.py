@@ -152,19 +152,21 @@ class AppItem(AWindowsItem):
     # Item implementation:
 
     def get_menu_left(self):
+        if len(self.visible_window_items) == 1:
+            return None
         menu = AWindowsItem.get_menu_left(self)
         if self.__app is None:
             return menu
 
-        if menu is None:
-            return None
-        menu.append(gtk.SeparatorMenuItem())
+        #if menu is None:
+        #    return None
+        #menu.append(gtk.SeparatorMenuItem())
 
-        def run(item):
-            self.app.run()
-        item = gtk.ImageMenuItem(gtk.STOCK_EXECUTE)
-        item.connect("activate", run)
-        menu.append(item)
+        #def run(item):
+        #    self.app.run()
+        #item = gtk.ImageMenuItem(gtk.STOCK_EXECUTE)
+        #item.connect("activate", run)
+        #menu.append(item)
         return menu
 
     def get_menu_right(self):
