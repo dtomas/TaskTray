@@ -81,6 +81,8 @@ class AppItem(AWindowsItem):
 
     def offer_window(self, window):
         class_group = window.get_class_group()
+        if class_group is None:
+            return False
         if (self.__class_group is not None and
                 self.__class_group is class_group):
             self.add_window(window)
