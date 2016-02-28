@@ -32,6 +32,7 @@ class TaskTray(ManagedTray):
             create_main_item=partial(
                 TaskTrayMainItem,
                 win_config=win_config,
+                appitem_config=appitem_config,
                 screen=screen,
             ),
         )

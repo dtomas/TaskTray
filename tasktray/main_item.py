@@ -1,13 +1,21 @@
+from rox import get_local_path
+
 from traylib.main_item import MainItem
 from traylib.icons import ThemedIcon
+
+from tasktray.app import AppError
+from tasktray.rox_app import ROXApp
+from tasktray.desktop_app import DesktopApp
+from tasktray.appitem import AppItem
 
 
 class TaskTrayMainItem(MainItem):
 
-    def __init__(self, tray, win_config, screen):
+    def __init__(self, tray, win_config, appitem_config, screen):
         MainItem.__init__(self, tray)
         self.__screen = screen
         self.__win_config = win_config
+        self.__appitem_config = appitem_config
         self.__screen_signal_handlers = [
             screen.connect(
                 "showing-desktop-changed", self.__showing_desktop_changed
@@ -19,7 +27,7 @@ class TaskTrayMainItem(MainItem):
                 lambda win_config: self.emit("name-changed")
             )
         ]
-        #self.connect("destroy", self.__destroy)
+        self.connect("destroyed", self.__destroyed)
 
 
     # Signal callbacks
@@ -28,7 +36,7 @@ class TaskTrayMainItem(MainItem):
         self.emit("icon-changed")
         self.emit("name-changed")
 
-    def __destroy(self, widget):
+    def __destroyed(self, widget):
         for handler in self.__screen_signal_handlers:
             self.__screen.disconnect(handler)
         for handler in self.__win_config_signal_handlers:
@@ -65,3 +73,35 @@ class TaskTrayMainItem(MainItem):
             s += _("Scroll up to show windows of all workspaces.")
         #s += _("Right click will open the TaskTray menu.")
         return s
+
+    def is_drop_target(self):
+        return True
+
+    def uris_dropped(self, uri_list, action):
+        for uri in uri_list:
+            path = get_local_path(uri)
+            if not path:
+                continue
+            try:
+                app = ROXApp(path)
+            except AppError:
+                try:
+                    app = DesktopApp(path)
+                except AppError:
+                    continue
+            has_item = False
+            for item in self.tray.items:
+                if item.app is not None and item.app.path == app.path:
+                    has_item = True
+                    break
+            if has_item:
+                continue
+            appitem = AppItem(
+                self.__win_config,
+                self.__appitem_config,
+                self.__screen,
+                class_group=None,
+                app=app,
+                pinned=True,
+            )
+            self.tray.add_item(None, appitem)

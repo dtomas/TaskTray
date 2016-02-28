@@ -14,6 +14,9 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
 
     tray.add_box(None)
 
+    class state:
+        initializing = True
+
     def get_pinned_items_path():
         return os.path.join(
             xdg_config_home, "dtomas", "TaskTray", "pinned-icons.json"
@@ -65,15 +68,22 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
                     app=app,
                     pinned=True,
                 )
-                appitem.connect("pinned", save_pinned_items)
-                appitem.connect("unpinned", save_pinned_items)
                 tray.add_item(None, appitem)
         class_group2windows = {}
         for window in screen.get_windows():
             window_opened(screen, window)
             yield None
+        state.initializing = False
 
     def unmanage():
         yield None
+
+    def item_added(tray, item):
+        if not state.initializing:
+            save_pinned_items(item)
+        item.connect("pinned", save_pinned_items)
+        item.connect("unpinned", save_pinned_items)
+
+    tray.connect("item-added", item_added)
 
     return manage, unmanage

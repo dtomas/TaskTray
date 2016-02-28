@@ -1,7 +1,7 @@
 import os
 import locale
 import subprocess
-from ConfigParser import RawConfigParser, NoOptionError
+from ConfigParser import RawConfigParser, NoOptionError, Error
 
 from rox import get_local_path
 from rox.basedir import xdg_data_dirs
@@ -17,7 +17,12 @@ class DesktopApp(object):
         if not os.path.exists(desktop_file):
             raise AppError("Desktop file %s does not exist." % desktop_file)
         parser = RawConfigParser()
-        parser.read(desktop_file)
+        try:
+            parser.read(desktop_file)
+        except Error as e:
+            raise AppError("Error reading file %s: %s" % (desktop_file, e))
+        if not parser.has_section("Desktop Entry"):
+            raise AppError("No desktop entry section in %s." % desktop_file)
         lang = locale.getdefaultlocale()[0].split('_')[0]
         try:
             self.__exec = parser.get("Desktop Entry", "Exec")
