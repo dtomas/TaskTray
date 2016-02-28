@@ -18,6 +18,7 @@
       </frame>
     </hbox>
     <frame label='Size'>
+      <numentry name='icon_size_min' label='Minimum icon size:' min='16' max='96' step='8'/>
       <numentry name='icon_size_max' label='Maximum icon size:' min='16' max='96' step='8'/>
     </frame>
     <frame label='Appearance'>
