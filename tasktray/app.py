@@ -1,4 +1,9 @@
+import re
 import subprocess
+
+
+def normalize_app_id(app_id):
+    return re.sub("[0-9\.\-]", "", app_id.lower())
 
 
 class AppAction(object):

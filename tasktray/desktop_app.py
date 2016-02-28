@@ -7,7 +7,7 @@ from rox.basedir import xdg_data_dirs
 
 from traylib.icons import ThemedIcon, FileIcon
 
-from tasktray.app import AppError, AppAction
+from tasktray.app import AppError, AppAction, normalize_app_id
 
 
 class DesktopApp(object):
@@ -101,16 +101,14 @@ class DesktopApp(object):
 
     @staticmethod
     def from_name(appname):
-        appname = appname.lower()
+        appname = normalize_app_id(appname)
         for datadir in xdg_data_dirs:
             applications_dir = os.path.join(datadir, "applications")
             if not os.path.isdir(applications_dir):
                 continue
             filenames = os.listdir(applications_dir)
             for leafname in filenames:
-                if os.path.splitext(leafname)[0].lower() == appname:
-                    return DesktopApp(os.path.join(applications_dir, leafname))
-            for leafname in filenames:
-                if os.path.splitext(leafname)[0].lower().startswith(appname):
+                if (normalize_app_id(os.path.splitext(leafname)[0].lower()) ==
+                        appname):
                     return DesktopApp(os.path.join(applications_dir, leafname))
         return None

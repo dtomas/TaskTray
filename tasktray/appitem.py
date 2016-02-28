@@ -12,6 +12,7 @@ from traylib import TARGET_URI_LIST
 from traylib.winitem import AWindowsItem
 from traylib.icons import ThemedIcon, PixbufIcon
 
+from tasktray.app import normalize_app_id
 from tasktray.rox_app import ROXApp
 from tasktray.desktop_app import DesktopApp
 
@@ -88,9 +89,9 @@ class AppItem(AWindowsItem):
         if self.__app is None:
             return False
         app_ids = list(self.__iter_app_ids_from_class_group(class_group))
-        my_app_id = self.__strip_app_id(self.__app.id)
+        my_app_id = normalize_app_id(self.__app.id)
         for app_id in app_ids:
-            if my_app_id == self.__strip_app_id(app_id):
+            if my_app_id == normalize_app_id(app_id):
                 self.add_window(window)
                 return True
         #for app_id in app_ids:
@@ -122,9 +123,6 @@ class AppItem(AWindowsItem):
 
 
     # Private methods:
-
-    def __strip_app_id(self, app_id):
-        return re.sub("[0-9\.\-]", "", app_id.lower())
 
     def __iter_app_ids_from_class_group(self, class_group):
         name = class_group.get_res_class()
