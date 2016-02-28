@@ -126,7 +126,7 @@ class DesktopApp(object):
                     for arg in self.__exec.split(' '):
                         if arg == "%u":
                             command.append(uri)
-                        elif arg == "%F":
+                        elif arg == "%f":
                             command.append(get_local_path(uri))
                         else:
                             command.append(arg)
