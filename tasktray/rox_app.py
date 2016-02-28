@@ -59,8 +59,8 @@ class ROXApp(object):
     def icons(self):
         return [FileIcon(self.__dir_icon)]
 
-    def run(self):
-        subprocess.Popen([self.__app_run])
+    def run(self, uri_list=[]):
+        subprocess.Popen([self.__app_run] + uri_list)
 
     @staticmethod
     def from_name(appname):

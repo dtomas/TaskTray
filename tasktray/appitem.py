@@ -290,6 +290,13 @@ class AppItem(AWindowsItem):
             return True
         return AWindowsItem.click(self, time)
 
+    def uris_dropped(self, uri_list, action):
+        if self.__app is not None:
+            self.__app.run(uri_list)
+
+    def is_drop_target(self):
+        return self.__app is not None
+
 
     # AWindowsItem implementation:
 

@@ -3,6 +3,7 @@ import locale
 import subprocess
 from ConfigParser import RawConfigParser, NoOptionError
 
+from rox import get_local_path
 from rox.basedir import xdg_data_dirs
 
 from traylib.icons import ThemedIcon, FileIcon
@@ -92,12 +93,31 @@ class DesktopApp(object):
         else:
             return [ThemedIcon(self.__icon_name)]
 
-    def run(self):
-        command = [
-            arg for arg in self.__exec.split(' ')
-            if arg not in {"%f", "%F", "%u", "%U"}
-        ]
-        subprocess.Popen(command)
+    def run(self, uri_list=[]):
+        is_multi = "%F" in self.__exec or "%U" in self.__exec
+        if is_multi:
+            command = []
+            for arg in self.__exec.split(' '):
+                if arg == "%U":
+                    for uri in uri_list:
+                        command.append(uri)
+                elif arg == "%F":
+                    for uri in uri_list:
+                        command.append(get_local_path(uri))
+                else:
+                    command.append(arg)
+            subprocess.Popen(command)
+        else:
+            for uri in uri_list:
+                command = []
+                for arg in self.__exec.split(' '):
+                    if arg == "%u":
+                        command.append(uri)
+                    elif arg == "%F":
+                        command.append(get_local_path(uri))
+                    else:
+                        command.append(arg)
+                subprocess.Popen(command)
 
     @staticmethod
     def from_name(appname):
