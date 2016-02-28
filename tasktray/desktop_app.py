@@ -65,6 +65,13 @@ class DesktopApp(object):
             self.__app_options.append(
                 AppAction(name, exec_.split(' '), icon_name)
             )
+        self.__is_drop_target = (
+            "%f" in self.__exec or
+            "%F" in self.__exec or
+            "%u" in self.__exec or
+            "%U" in self.__exec
+        )
+        self.__is_multi_drop = "%F" in self.__exec or "%U" in self.__exec
 
     @property
     def help_dir(self):
@@ -93,31 +100,37 @@ class DesktopApp(object):
         else:
             return [ThemedIcon(self.__icon_name)]
 
+    @property
+    def is_drop_target(self):
+        return self.__is_drop_target
+
     def run(self, uri_list=[]):
-        is_multi = "%F" in self.__exec or "%U" in self.__exec
-        if is_multi:
-            command = []
-            for arg in self.__exec.split(' '):
-                if arg == "%U":
-                    for uri in uri_list:
-                        command.append(uri)
-                elif arg == "%F":
-                    for uri in uri_list:
-                        command.append(get_local_path(uri))
-                else:
-                    command.append(arg)
-            subprocess.Popen(command)
+        if not self.__is_drop_target:
+            subprocess.Popen(self.__exec.split(' '))
         else:
-            for uri in uri_list:
+            if self.__is_multi_drop:
                 command = []
                 for arg in self.__exec.split(' '):
-                    if arg == "%u":
-                        command.append(uri)
+                    if arg == "%U":
+                        for uri in uri_list:
+                            command.append(uri)
                     elif arg == "%F":
-                        command.append(get_local_path(uri))
+                        for uri in uri_list:
+                            command.append(get_local_path(uri))
                     else:
                         command.append(arg)
                 subprocess.Popen(command)
+            else:
+                for uri in uri_list:
+                    command = []
+                    for arg in self.__exec.split(' '):
+                        if arg == "%u":
+                            command.append(uri)
+                        elif arg == "%F":
+                            command.append(get_local_path(uri))
+                        else:
+                            command.append(arg)
+                    subprocess.Popen(command)
 
     @staticmethod
     def from_name(appname):

@@ -295,7 +295,7 @@ class AppItem(AWindowsItem):
             self.__app.run(uri_list)
 
     def is_drop_target(self):
-        return self.__app is not None
+        return self.__app is not None and self.__app.is_drop_target
 
 
     # AWindowsItem implementation:
