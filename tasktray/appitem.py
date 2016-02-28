@@ -44,7 +44,6 @@ class AppItem(AWindowsItem):
             screen.connect(
                 "showing-desktop-changed", self.__showing_desktop_changed
             ),
-            screen.connect("window-closed", self.__window_closed),
             screen.connect(
                 "class-group-closed", self.__class_group_closed
             ),
@@ -108,9 +107,6 @@ class AppItem(AWindowsItem):
 
     def __themed_icons_changed(self, appitem_config):
         self.emit("icon-changed")
-
-    def __window_closed(self, screen, window):
-        self.remove_window(window)
 
     def __showing_desktop_changed(self, screen):
         self.emit("is-visible-changed")
