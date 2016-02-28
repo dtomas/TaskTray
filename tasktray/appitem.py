@@ -1,4 +1,5 @@
 import os
+import re
 from urllib import pathname2url
 
 import gobject
@@ -29,21 +30,24 @@ class AppItem(AWindowsItem):
         self.__pinned = pinned
 
         self.__class_group_handlers = []
-        self.__update_class_group()
+
+        if class_group is not None and app is None:
+            for name in self.__app_ids_from_class_group(class_group):
+                self.__app = ROXApp.from_name(name)
+                if self.__app is None:
+                    self.__app = DesktopApp.from_name(name)
+                if self.__app is not None:
+                    break
 
         self.__screen_handlers = [
             screen.connect(
                 "showing-desktop-changed", self.__showing_desktop_changed
             ),
-            screen.connect("window-opened", self.__window_opened),
             screen.connect("window-closed", self.__window_closed),
             screen.connect(
                 "class-group-closed", self.__class_group_closed
             ),
         ]
-
-        for window in screen.get_windows():
-            self.__window_opened(screen, window)
 
         self.connect(
             "visible-window-items-changed", self.__visible_window_items_changed
@@ -75,29 +79,34 @@ class AppItem(AWindowsItem):
         self.emit("has-arrow-changed")
         self.emit("zoom-changed")
 
-    def offer_class_group(self, class_group):
-        if self.__class_group is not None:
-            return self.__class_group is class_group
-        self.__update_class_group()
-        return class_group is self.__class_group
+    def offer_window(self, window):
+        class_group = window.get_class_group()
+        if (self.__class_group is not None and
+                self.__class_group is class_group):
+            self.add_window(window)
+            return True
+        if self.__app is None:
+            return False
+        app_ids = list(self.__app_ids_from_class_group(class_group))
+        my_app_id = self.__strip_app_id(self.__app.id)
+        for app_id in app_ids:
+            if my_app_id == self.__strip_app_id(app_id):
+                self.add_window(window)
+                return True
+        #for app_id in app_ids:
+        #    if (app_id.lower().startswith(my_app_id) or my_app_id.startswith(app_id.lower())):
+        #        self.add_window(window)
+        #        return True
+        return False
 
     def __class_group_closed(self, screen, class_group):
         if class_group is self.__class_group:
             self.__class_group = None
-            if self.__app is None:
+            if self.__app is None or not self.__pinned:
                 self.destroy()
-            else:
-                self.__update_class_group()
-                if not self.__pinned:
-                    self.destroy()
 
     def __themed_icons_changed(self, appitem_config):
         self.emit("icon-changed")
-
-    def __window_opened(self, screen, window):
-        if (self.__class_group is not None and
-                window.get_class_group() is self.__class_group):
-            self.add_window(window)
 
     def __window_closed(self, screen, window):
         self.remove_window(window)
@@ -114,39 +123,17 @@ class AppItem(AWindowsItem):
 
     # Private methods:
 
+    def __strip_app_id(self, app_id):
+        return re.sub("[0-9\.\-]", "", app_id.lower())
+
     def __app_ids_from_class_group(self, class_group):
         for name in [class_group.get_name(), class_group.get_res_class()]:
+            if name is None:
+                continue
             parts = name.split('-')
             for i in range(1, len(parts) + 1):
                 name = '-'.join(parts[0 : i]) 
                 yield name
-                yield name.lower()
-
-    def __update_class_group(self):
-        if self.__class_group is None and self.__app is not None:
-            class_groups = set()
-            for window in self.__screen.get_windows():
-                class_groups.add(window.get_class_group())
-            for class_group in class_groups:
-                for app_id in self.__app_ids_from_class_group(class_group):
-                    if self.__app.id == app_id:
-                        self.__class_group = class_group
-                        break
-                if self.__class_group is not None:
-                    break
-        elif self.__class_group is not None and self.__app is None:
-            for name in self.__app_ids_from_class_group(self.__class_group):
-                self.__app = ROXApp.from_name(name)
-                if self.__app is None:
-                    self.__app = DesktopApp.from_name(name)
-                if self.__app is not None:
-                    break
-        else:
-            return
-
-        self.emit("base-name-changed")
-        self.emit("name-changed")
-        self.emit("zoom-changed")
 
 
     # Item implementation:

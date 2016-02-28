@@ -68,10 +68,11 @@ class ROXApp(object):
         for path in APPDIRPATH:
             if not path or not os.path.isdir(path):
                 continue
-            for appname in appnames:
-                app_dir = os.path.join(path, appname)
-                try:
-                    return ROXApp(app_dir)
-                except AppError:
-                    pass
+            for filename in os.listdir(path):
+                if filename.lower() == appname.lower():
+                    app_dir = os.path.join(path, filename)
+                    try:
+                        return ROXApp(app_dir)
+                    except AppError:
+                        pass
         return None

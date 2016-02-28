@@ -27,17 +27,20 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
         with open(get_pinned_items_path(), "w") as f:
             json.dump(pinned_items, f)
 
-    def class_group_opened(screen, class_group):
+    def window_opened(screen, window):
         for item in tray.items:
-            if item.offer_class_group(class_group):
+            if item.offer_window(window):
                 return
-        appitem = AppItem(win_config, appitem_config, screen, class_group)
+        appitem = AppItem(
+            win_config, appitem_config, screen, window.get_class_group()
+        )
         appitem.connect("pinned", save_pinned_items)
         appitem.connect("unpinned", save_pinned_items)
-        tray.add_item(None, class_group.get_name(), appitem)
+        appitem.add_window(window)
+        tray.add_item(None, appitem)
 
     screen_handlers = [
-        screen.connect("class-group-opened", class_group_opened),
+        screen.connect("window-opened", window_opened),
     ]
 
     def manage():
@@ -64,16 +67,10 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
                 )
                 appitem.connect("pinned", save_pinned_items)
                 appitem.connect("unpinned", save_pinned_items)
-                tray.add_item(None, app.id, appitem)
+                tray.add_item(None, appitem)
         class_group2windows = {}
         for window in screen.get_windows():
-            class_group = window.get_class_group()
-            if class_group in class_group2windows:
-                class_group2windows[class_group].append(window)
-            else:
-                class_group2windows[class_group] = [window]
-        for class_group in class_group2windows:
-            class_group_opened(screen, class_group)
+            window_opened(screen, window)
             yield None
 
     def unmanage():
