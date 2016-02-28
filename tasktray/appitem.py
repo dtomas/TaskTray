@@ -29,6 +29,7 @@ class AppItem(AWindowsItem):
         self.__class_group = class_group
         self.__app = app
         self.__pinned = pinned
+        self.__starting = False
 
         self.__class_group_handlers = []
 
@@ -78,6 +79,9 @@ class AppItem(AWindowsItem):
         self.emit("is-greyed-out-changed")
         self.emit("has-arrow-changed")
         self.emit("zoom-changed")
+        if self.visible_window_items:
+            self.__starting = False
+            self.emit("is-blinking-changed")
 
     def offer_window(self, window):
         class_group = window.get_class_group()
@@ -201,7 +205,7 @@ class AppItem(AWindowsItem):
         menu.prepend(gtk.SeparatorMenuItem())
 
         def run(item):
-            self.app.run()
+            self.run()
         item = gtk.ImageMenuItem(gtk.STOCK_EXECUTE)
         item.connect("activate", run)
         menu.prepend(item)
@@ -284,7 +288,7 @@ class AppItem(AWindowsItem):
     def click(self, time=0L):
         visible_window_items = self.visible_window_items
         if len(visible_window_items) == 0 and self.__app is not None:
-            self.__app.run()
+            self.run()
             return True
         return AWindowsItem.click(self, time)
 
@@ -294,6 +298,9 @@ class AppItem(AWindowsItem):
 
     def is_drop_target(self):
         return self.__app is not None and self.__app.is_drop_target
+
+    def is_blinking(self):
+        return self.__starting or AWindowsItem.is_blinking(self)
 
 
     # AWindowsItem implementation:
@@ -306,6 +313,16 @@ class AppItem(AWindowsItem):
         return None
 
     
+    # Public methods:
+
+    def run(self):
+        if self.__app is None:
+            return
+        self.__starting = True
+        self.emit("is-blinking-changed")
+        self.__app.run()
+
+
     # Properties:
 
     @property
