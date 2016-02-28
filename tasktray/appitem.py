@@ -32,7 +32,7 @@ class AppItem(AWindowsItem):
         self.__class_group_handlers = []
 
         if class_group is not None and app is None:
-            for name in self.__app_ids_from_class_group(class_group):
+            for name in self.__iter_app_ids_from_class_group(class_group):
                 self.__app = ROXApp.from_name(name)
                 if self.__app is None:
                     self.__app = DesktopApp.from_name(name)
@@ -87,7 +87,7 @@ class AppItem(AWindowsItem):
             return True
         if self.__app is None:
             return False
-        app_ids = list(self.__app_ids_from_class_group(class_group))
+        app_ids = list(self.__iter_app_ids_from_class_group(class_group))
         my_app_id = self.__strip_app_id(self.__app.id)
         for app_id in app_ids:
             if my_app_id == self.__strip_app_id(app_id):
@@ -126,14 +126,14 @@ class AppItem(AWindowsItem):
     def __strip_app_id(self, app_id):
         return re.sub("[0-9\.\-]", "", app_id.lower())
 
-    def __app_ids_from_class_group(self, class_group):
-        for name in [class_group.get_name(), class_group.get_res_class()]:
-            if name is None:
-                continue
-            parts = name.split('-')
-            for i in range(1, len(parts) + 1):
-                name = '-'.join(parts[0 : i]) 
-                yield name
+    def __iter_app_ids_from_class_group(self, class_group):
+        name = class_group.get_res_class()
+        if name is None:
+            name = class_group.get_name()
+        parts = name.split('-')
+        for i in range(len(parts), 0, -1):
+            name = '-'.join(parts[0 : i]) 
+            yield name
 
 
     # Item implementation:
