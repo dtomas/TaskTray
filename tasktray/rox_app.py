@@ -14,7 +14,7 @@ class ROXApp(object):
 
     def __init__(self, app_dir):
         if not rox.isappdir(app_dir):
-            raise AppError("No an app dir: %s" % app_dir)
+            raise AppError("Not an app dir: %s" % app_dir)
         self.__path = app_dir
         help_dir = os.path.join(app_dir, 'Help')
         if os.path.isdir(help_dir):
