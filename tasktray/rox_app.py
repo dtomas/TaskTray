@@ -62,7 +62,7 @@ class ROXApp(object):
     is_drop_target = True
 
     def run(self, uri_list=[]):
-        subprocess.Popen([self.__app_run] + uri_list)
+        subprocess.Popen([self.__app_run] + list(uri_list))
 
     @staticmethod
     def from_name(appname):
