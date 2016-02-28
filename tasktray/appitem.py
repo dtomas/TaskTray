@@ -287,7 +287,8 @@ class AppItem(AWindowsItem):
 
     def click(self, time=0L):
         visible_window_items = self.visible_window_items
-        if len(visible_window_items) == 0 and self.__app is not None:
+        if (len(visible_window_items) == 0 and
+                self.__app is not None and not self.__starting):
             self.run()
             return True
         return AWindowsItem.click(self, time)
