@@ -1,14 +1,13 @@
 # TaskTray Applet
-# Copyright (C) 2006 Dennis Tomas
+# Copyright (C) 2016 Dennis Tomas
 # This file is distributed under the same license as the TaskTray package.
-# Dennis Tomas <den.t@gmx.de>, 2006.
+# Dennis Tomas <den.t@gmx.de>, 2016.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: TaskTray 0.7.4\n"
+"Project-Id-Version: TaskTray 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-27 01:22+CET\n"
+"POT-Creation-Date: 2016-02-29 10:52+CET\n"
 "PO-Revision-Date: 2007-04-02 10:18+0200\n"
 "Last-Translator: Dennis Tomas <den.t@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +16,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tasktray/appitem.py:168
+#: tasktray/appitem.py:169
 msgid "Pin to TaskTray"
 msgstr "An TaskTray anheften"
 
-#: tasktray/appitem.py:181
+#: tasktray/appitem.py:182
 msgid "Remove from TaskTray"
 msgstr "Von TaskTray lösen"
 
-#: tasktray/main_item.py:59
+#: tasktray/main_item.py:67
 msgid "Click to show windows.\n"
 msgstr "Klicken, um die Fenster anzuzeigen.\n"
 
-#: tasktray/main_item.py:61
+#: tasktray/main_item.py:69
 msgid "Click to show the desktop.\n"
 msgstr "Klicken, um den Arbeitsplatz anzuzeigen.\n"
 
-#: tasktray/main_item.py:63
+#: tasktray/main_item.py:71
 msgid "Scroll down to only show windows of this workspace."
 msgstr "Abwärts rollen, um nur Fenster dieser Arbeitsfläche anzuzeigen."
 
-#: tasktray/main_item.py:65
+#: tasktray/main_item.py:73
 msgid "Scroll up to show windows of all workspaces."
 msgstr "Aufwärts rollen, um Fenster aller Arbeitsflächen anzuzeigen."
 
@@ -74,18 +73,22 @@ msgid "Size"
 msgstr "Größe"
 
 #: tipsH:11 tipsV:11
+msgid "Minimum icon size:"
+msgstr "Minimale Symbolgröße:"
+
+#: tipsH:12 tipsV:12
 msgid "Maximum icon size:"
 msgstr "Maximale Symbolgröße:"
 
-#: tipsH:12 tipsV:12
+#: tipsH:13 tipsV:13
 msgid "Appearance"
 msgstr "Aussehen"
 
-#: tipsH:13 tipsV:13
+#: tipsH:14 tipsV:14
 msgid "Use themed icons if possible"
 msgstr "Wenn möglich, Symbole aus dem aktuellen Symbolthema verwenden"
 
-#: tipsH:14 tipsV:14
+#: tipsH:15 tipsV:15
 msgid "Enable visual effects"
 msgstr "Visuelle Effekte aktivieren"
 
