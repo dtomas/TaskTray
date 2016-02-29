@@ -34,6 +34,8 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
         for item in tray.items:
             if item.offer_window(window):
                 return
+        if window.get_class_group() is None:
+            return
         appitem = AppItem(
             win_config, appitem_config, screen, window.get_class_group()
         )
