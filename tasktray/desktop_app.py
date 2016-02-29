@@ -77,6 +77,14 @@ class DesktopApp(object):
             "%U" in self.__exec
         )
         self.__is_multi_drop = "%F" in self.__exec or "%U" in self.__exec
+        try:
+            self.__description = parser.get("Desktop Entry", "Comment")
+        except NoOptionError:
+            self.__description = self.__name
+
+    @property
+    def description(self):
+        return self.__description
 
     @property
     def help_dir(self):
@@ -108,6 +116,10 @@ class DesktopApp(object):
     @property
     def is_drop_target(self):
         return self.__is_drop_target
+
+    @property
+    def command(self):
+        return self.__exec
 
     def run(self, uri_list=[]):
         if not self.__is_drop_target:
