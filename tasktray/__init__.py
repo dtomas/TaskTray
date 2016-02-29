@@ -12,14 +12,14 @@ from tasktray.main_item import TaskTrayMainItem
 
 class TaskTray(ManagedTray):
 
-    def __init__(self, icon_config, tray_config, win_config, appitem_config,
+    def __init__(self, tray_config, icon_config, win_config, appitem_config,
                  screen):
         self.__win_config = win_config
         self.__appitem_config = appitem_config
         self.__screen = screen
 
         ManagedTray.__init__(
-            self, icon_config, tray_config,
+            self,
             managers=[
                 partial(
                     manage_appitems,
@@ -31,6 +31,8 @@ class TaskTray(ManagedTray):
             ],
             create_main_item=partial(
                 TaskTrayMainItem,
+                tray_config=tray_config,
+                icon_config=icon_config,
                 win_config=win_config,
                 appitem_config=appitem_config,
                 screen=screen,

@@ -44,16 +44,14 @@ class TaskTrayMain(Main):
         # TaskTray doesn't use the 'hidden' option, so make sure no icons get
         # hidden.
         self.icon_config.hidden = False
-        
-    def mainloop(self, app_args):
-        Main.mainloop(
-            self, app_args,
-            partial(
-                TaskTray,
-                win_config=self.__win_config,
-                appitem_config=self.__appitem_config,
-                screen=self.__screen,
-            )
+
+    def create_tray(self):
+        return TaskTray(
+            tray_config=self.tray_config,
+            icon_config=self.icon_config,
+            win_config=self.__win_config,
+            appitem_config=self.__appitem_config,
+            screen=self.__screen,
         )
 
     def options_changed(self):

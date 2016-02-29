@@ -11,8 +11,9 @@ from tasktray.appitem import AppItem
 
 class TaskTrayMainItem(MainItem):
 
-    def __init__(self, tray, win_config, appitem_config, screen):
-        MainItem.__init__(self, tray)
+    def __init__(self, tray, tray_config, icon_config, win_config,
+                 appitem_config, screen):
+        MainItem.__init__(self, tray, tray_config, icon_config)
         self.__screen = screen
         self.__win_config = win_config
         self.__appitem_config = appitem_config
@@ -32,15 +33,15 @@ class TaskTrayMainItem(MainItem):
 
     # Signal callbacks
 
-    def __showing_desktop_changed(self, screen):
-        self.emit("icon-changed")
-        self.emit("name-changed")
-
     def __destroyed(self, widget):
         for handler in self.__screen_signal_handlers:
             self.__screen.disconnect(handler)
         for handler in self.__win_config_signal_handlers:
             self.__win_config.disconnect(handler)
+
+    def __showing_desktop_changed(self, screen):
+        self.emit("icon-changed")
+        self.emit("name-changed")
 
 
     # Methods inherited from Item.
@@ -104,4 +105,4 @@ class TaskTrayMainItem(MainItem):
                 app=app,
                 pinned=True,
             )
-            self.tray.add_item(None, appitem)
+            self.tray.get_box("appitems").add_item(appitem)
