@@ -4,19 +4,18 @@ from traylib.main_item import MainItem
 from traylib.icons import ThemedIcon
 
 from tasktray.app import AppError
-from tasktray.rox_app import ROXApp
-from tasktray.desktop_app import DesktopApp
 from tasktray.appitem import AppItem
 
 
 class TaskTrayMainItem(MainItem):
 
     def __init__(self, tray, tray_config, icon_config, win_config,
-                 appitem_config, screen):
+                 appitem_config, screen, get_app_by_path):
         MainItem.__init__(self, tray, tray_config, icon_config)
         self.__screen = screen
         self.__win_config = win_config
         self.__appitem_config = appitem_config
+        self.__get_app_by_path = get_app_by_path
         self.__screen_signal_handlers = [
             screen.connect(
                 "showing-desktop-changed", self.__showing_desktop_changed
@@ -83,13 +82,9 @@ class TaskTrayMainItem(MainItem):
             path = get_local_path(uri)
             if not path:
                 continue
-            try:
-                app = ROXApp(path)
-            except AppError:
-                try:
-                    app = DesktopApp(path)
-                except AppError:
-                    continue
+            app = self.__get_app_by_path(path)
+            if app is None:
+                continue
             has_item = False
             for item in self.tray.items:
                 if item.app is not None and item.app.path == app.path:

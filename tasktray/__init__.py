@@ -13,7 +13,7 @@ from tasktray.main_item import TaskTrayMainItem
 class TaskTray(ManagedTray):
 
     def __init__(self, tray_config, icon_config, win_config, appitem_config,
-                 screen):
+                 screen, get_app_by_path, get_app_by_name):
         self.__win_config = win_config
         self.__appitem_config = appitem_config
         self.__screen = screen
@@ -27,6 +27,8 @@ class TaskTray(ManagedTray):
                     icon_config=icon_config,
                     win_config=win_config,
                     appitem_config=appitem_config,
+                    get_app_by_path=get_app_by_path,
+                    get_app_by_name=get_app_by_name,
                 )
             ],
             create_main_item=partial(
@@ -36,6 +38,7 @@ class TaskTray(ManagedTray):
                 win_config=win_config,
                 appitem_config=appitem_config,
                 screen=screen,
+                get_app_by_path=get_app_by_path,
             ),
         )
 

@@ -13,14 +13,12 @@ from traylib.winitem import AWindowsItem
 from traylib.icons import ThemedIcon, PixbufIcon
 
 from tasktray.app import normalize_app_id
-from tasktray.rox_app import ROXApp
-from tasktray.desktop_app import DesktopApp
 
 
 class AppItem(AWindowsItem):
 
-    def __init__(self, win_config, appitem_config, screen, class_group=None,
-                 app=None, pinned=False):
+    def __init__(self, win_config, appitem_config, screen, get_app_by_name,
+                 class_group=None, app=None, pinned=False):
         assert class_group or app
 
         AWindowsItem.__init__(self, win_config, screen)
@@ -35,9 +33,7 @@ class AppItem(AWindowsItem):
 
         if class_group is not None and app is None:
             for name in self.__iter_app_ids_from_class_group(class_group):
-                self.__app = ROXApp.from_name(name)
-                if self.__app is None:
-                    self.__app = DesktopApp.from_name(name)
+                self.__app = get_app_by_name(name)
                 if self.__app is not None:
                     break
 

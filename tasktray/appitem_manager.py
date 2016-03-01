@@ -10,7 +10,8 @@ from tasktray.rox_app import ROXApp
 from tasktray.desktop_app import DesktopApp
 
 
-def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
+def manage_appitems(tray, screen, icon_config, win_config, appitem_config,
+                    get_app_by_path, get_app_by_name):
 
     box = ItemBox("appitems")
     tray.add_box(box)
@@ -38,7 +39,8 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
         if window.get_class_group() is None:
             return
         appitem = AppItem(
-            win_config, appitem_config, screen, window.get_class_group()
+            win_config, appitem_config, screen, get_app_by_name,
+            window.get_class_group(),
         )
         appitem.connect("pinned", save_pinned_items)
         appitem.connect("unpinned", save_pinned_items)
@@ -56,17 +58,14 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
                 pinned_items = json.load(f)
             for path in pinned_items:
                 yield None
-                try:
-                    app = ROXApp(path)
-                except AppError:
-                    try:
-                        app = DesktopApp(path)
-                    except AppError:
-                        continue
+                app = get_app_by_path(path)
+                if app is None:
+                    continue
                 appitem = AppItem(
                     win_config,
                     appitem_config,
                     screen,
+                    get_app_by_name,
                     class_group=None,
                     app=app,
                     pinned=True,
