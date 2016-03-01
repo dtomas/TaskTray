@@ -188,13 +188,13 @@ class AppItem(AWindowsItem):
             )
             item.connect("activate", unpin)
             menu.prepend(item)
-        if self.__app.help_dir or self.__app.options:
+        if self.__app.help_dir or self.__app.actions:
             menu.prepend(gtk.SeparatorMenuItem())
         if self.__app.help_dir is not None:
             item = gtk.ImageMenuItem(gtk.STOCK_HELP)
             menu.prepend(item)
             item.connect("activate", self.__show_help)
-        for option in self.__app.options:
+        for option in self.__app.actions:
             item = gtk.ImageMenuItem(option.label)
             item.connect("activate", self.__exec_option, option)
             stock_id = option.stock_icon
@@ -311,7 +311,6 @@ class AppItem(AWindowsItem):
             return self.__app.name
         return None
 
-    
 
     # Public methods:
 

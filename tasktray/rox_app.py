@@ -7,10 +7,10 @@ from rox import AppInfo, filer
 from traylib import APPDIRPATH
 from traylib.icons import FileIcon
 
-from tasktray.app import AppError, AppAction
+from tasktray.app import IApp, AppError, AppAction
 
 
-class ROXApp(object):
+class ROXApp(IApp):
 
     def __init__(self, app_dir):
         if not rox.isappdir(app_dir):
@@ -59,7 +59,7 @@ class ROXApp(object):
         return self.__name
 
     @property
-    def options(self):
+    def actions(self):
         return self.__app_options
 
     @property

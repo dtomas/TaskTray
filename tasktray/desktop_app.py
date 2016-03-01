@@ -8,10 +8,10 @@ from rox.basedir import xdg_data_dirs
 
 from traylib.icons import ThemedIcon, FileIcon
 
-from tasktray.app import AppError, AppAction, normalize_app_id
+from tasktray.app import IApp, AppError, AppAction, normalize_app_id
 
 
-class DesktopApp(object):
+class DesktopApp(IApp):
 
     def __init__(self, desktop_file):
         if not os.path.exists(desktop_file):
@@ -103,7 +103,7 @@ class DesktopApp(object):
         return self.__id
 
     @property
-    def options(self):
+    def actions(self):
         return self.__app_options
 
     @property
