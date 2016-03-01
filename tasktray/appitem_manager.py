@@ -79,6 +79,7 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config):
         state.initializing = False
 
     def unmanage():
+        box.destroy()
         yield None
 
     def item_added(box, item):
