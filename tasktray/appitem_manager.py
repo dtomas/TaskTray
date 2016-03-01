@@ -71,7 +71,6 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config,
                     pinned=True,
                 )
                 box.add_item(appitem)
-        class_group2windows = {}
         for window in screen.get_windows():
             window_opened(screen, window)
             yield None
