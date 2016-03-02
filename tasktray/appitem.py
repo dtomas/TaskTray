@@ -46,9 +46,7 @@ class AppItem(AWindowsItem):
             ),
         ]
 
-        self.connect(
-            "visible-window-items-changed", self.__visible_window_items_changed
-        )
+        self.connect("changed", self.__changed)
         self.connect("destroyed", self.__destroyed)
 
         self.__appitem_config_handlers = [
@@ -69,14 +67,16 @@ class AppItem(AWindowsItem):
             for handler in self.__class_group_handlers:
                 self.__class_group.disconnect(handler)
 
-    def __visible_window_items_changed(self, item):
-        self.emit("icon-changed")
-        self.emit("name-changed")
-        self.emit("is-greyed-out-changed")
-        self.emit("has-arrow-changed")
-        self.emit("zoom-changed")
-        self.__starting = False
-        self.emit("is-arrow-blinking-changed")
+    def __changed(self, item, props):
+        if "visible-window-items" in props:
+            changed_props = {
+                "icon", "name", "is-greyed-out", "has-arrow", "zoom"
+            }
+            starting = self.__starting
+            self.__starting = False
+            if starting != self.__starting:
+                changed_props.add("is-arrow-blinking")
+            self.emit("changed", changed_props)
 
     def offer_window(self, window):
         class_group = window.get_class_group()
@@ -107,10 +107,10 @@ class AppItem(AWindowsItem):
                 self.destroy()
 
     def __themed_icons_changed(self, appitem_config):
-        self.emit("icon-changed")
+        self.changed("icon")
 
     def __showing_desktop_changed(self, screen):
-        self.emit("is-visible-changed")
+        self.changed("is-visible")
 
     def __show_help(self, menu_item):
         filer.open_dir(os.path.join(self.__app.help_dir))
@@ -163,7 +163,7 @@ class AppItem(AWindowsItem):
         if not self.__pinned:
             def pin(item):
                 self.__pinned = True
-                self.emit("is-visible-changed")
+                self.changed("is-visible")
                 self.emit("pinned")
             item = gtk.ImageMenuItem(_("Pin to TaskTray"))
             item.get_image().set_from_stock(
@@ -174,7 +174,7 @@ class AppItem(AWindowsItem):
         else:
             def unpin(item):
                 self.__pinned = False
-                self.emit("is-visible-changed")
+                self.changed("is-visible")
                 self.emit("unpinned")
                 if self.__class_group is None:
                     self.destroy()
@@ -312,7 +312,7 @@ class AppItem(AWindowsItem):
 
     def run(self, uri_list=()):
         self.__starting = True
-        self.emit("is-arrow-blinking-changed")
+        self.changed("is-arrow-blinking")
         self.__app.run(uri_list)
 
 
