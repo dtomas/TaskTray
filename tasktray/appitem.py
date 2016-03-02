@@ -76,7 +76,10 @@ class AppItem(AWindowsItem):
             self.__starting = False
             if starting != self.__starting:
                 changed_props.add("is-arrow-blinking")
-            self.emit("changed", changed_props)
+            # Do not emit property changes again.
+            changed_props.difference_update(props)
+            if changed_props:
+                self.emit("changed", changed_props)
 
     def offer_window(self, window):
         class_group = window.get_class_group()
