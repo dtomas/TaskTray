@@ -24,7 +24,7 @@ class TaskTrayMainItem(MainItem):
         self.__win_config_signal_handlers = [
             win_config.connect(
                 "all-workspaces-changed",
-                lambda win_config: self.emit("name-changed")
+                lambda win_config: self.changed("name")
             )
         ]
         self.connect("destroyed", self.__destroyed)
@@ -39,8 +39,7 @@ class TaskTrayMainItem(MainItem):
             self.__win_config.disconnect(handler)
 
     def __showing_desktop_changed(self, screen):
-        self.emit("icon-changed")
-        self.emit("name-changed")
+        self.changed("icon", "name")
 
 
     # Methods inherited from Item.
