@@ -46,7 +46,6 @@ class AppItem(AWindowsItem):
             ),
         ]
 
-        self.connect("changed", self.__changed)
         self.connect("destroyed", self.__destroyed)
 
         self.__appitem_config_handlers = [
@@ -67,19 +66,17 @@ class AppItem(AWindowsItem):
             for handler in self.__class_group_handlers:
                 self.__class_group.disconnect(handler)
 
-    def __changed(self, item, props):
+    def _changed(self, props):
+        props_to_emit = set()
         if "visible-window-items" in props:
-            changed_props = {
+            props_to_emit.update({
                 "icon", "name", "is-greyed-out", "has-arrow", "zoom"
-            }
+            })
             starting = self.__starting
             self.__starting = False
             if starting != self.__starting:
-                changed_props.add("is-arrow-blinking")
-            # Do not emit property changes again.
-            changed_props.difference_update(props)
-            if changed_props:
-                self.emit("changed", changed_props)
+                props_to_emit.add("is-arrow-blinking")
+        AWindowsItem._changed(self, props, props_to_emit)
 
     def offer_window(self, window):
         class_group = window.get_class_group()
