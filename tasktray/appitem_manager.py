@@ -24,7 +24,7 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config,
             xdg_config_home, "dtomas", "TaskTray", "pinned-icons.json"
         )
 
-    def save_pinned_items(item):
+    def save_pinned_items(*args):
         pinned_items = []
         for item in box.items:
             if item.app is not None and item.is_pinned:
@@ -87,5 +87,6 @@ def manage_appitems(tray, screen, icon_config, win_config, appitem_config,
         item.connect("unpinned", save_pinned_items)
 
     box.connect("item-added", item_added)
+    box.connect("item-reordered", save_pinned_items)
 
     return manage, unmanage
