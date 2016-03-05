@@ -63,6 +63,11 @@ class DesktopApp(IApp):
                 exec_ = parser.get(section, "Exec")
             except NoOptionError:
                 continue
+            if ("%f" in exec_ or
+                    "%F" in exec_ or
+                    "%u" in exec_ or
+                    "%U" in exec_):
+                continue
             try:
                 icon_name = parser.get(section, "Icon")
             except NoOptionError:
