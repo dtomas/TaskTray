@@ -12,10 +12,9 @@ from tasktray.main_item import TaskTrayMainItem
 
 class TaskTray(ManagedTray):
 
-    def __init__(self, tray_config, icon_config, win_config, appitem_config,
-                 screen, get_app_by_path, get_app_by_name):
+    def __init__(self, tray_config, icon_config, win_config, screen,
+                 get_app_by_path, get_app_by_name):
         self.__win_config = win_config
-        self.__appitem_config = appitem_config
         self.__screen = screen
 
         ManagedTray.__init__(
@@ -26,7 +25,6 @@ class TaskTray(ManagedTray):
                     screen=screen,
                     icon_config=icon_config,
                     win_config=win_config,
-                    appitem_config=appitem_config,
                     get_app_by_path=get_app_by_path,
                     get_app_by_name=get_app_by_name,
                 )
@@ -36,12 +34,10 @@ class TaskTray(ManagedTray):
                 tray_config=tray_config,
                 icon_config=icon_config,
                 win_config=win_config,
-                appitem_config=appitem_config,
                 screen=screen,
                 get_app_by_path=get_app_by_path,
             ),
         )
 
     win_config = property(lambda self : self.__win_config)
-    appitem_config = property(lambda self : self.__appitem_config)
     screen = property(lambda self : self.__screen)

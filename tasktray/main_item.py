@@ -10,11 +10,10 @@ from tasktray.appitem import AppItem
 class TaskTrayMainItem(MainItem):
 
     def __init__(self, tray, tray_config, icon_config, win_config,
-                 appitem_config, screen, get_app_by_path):
+                 screen, get_app_by_path):
         MainItem.__init__(self, tray, tray_config, icon_config)
         self.__screen = screen
         self.__win_config = win_config
-        self.__appitem_config = appitem_config
         self.__get_app_by_path = get_app_by_path
         self.__screen_signal_handlers = [
             screen.connect(
@@ -93,7 +92,6 @@ class TaskTrayMainItem(MainItem):
                 continue
             appitem = AppItem(
                 self.__win_config,
-                self.__appitem_config,
                 self.__screen,
                 class_group=None,
                 app=app,

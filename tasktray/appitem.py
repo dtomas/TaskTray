@@ -17,12 +17,11 @@ from tasktray.app import normalize_app_id
 
 class AppItem(AWindowsItem):
 
-    def __init__(self, win_config, appitem_config, screen, get_app_by_name,
-                 class_group=None, app=None, pinned=False):
+    def __init__(self, win_config, screen, get_app_by_name, class_group=None,
+                 app=None, pinned=False):
         assert class_group or app
 
         AWindowsItem.__init__(self, win_config, screen)
-        self.__appitem_config = appitem_config
         self.__screen = screen
         self.__class_group = class_group
         self.__app = app
@@ -48,20 +47,12 @@ class AppItem(AWindowsItem):
 
         self.connect("destroyed", self.__destroyed)
 
-        self.__appitem_config_handlers = [
-            appitem_config.connect(
-                "themed-icons-changed", self.__themed_icons_changed
-            ),
-        ]
-
 
     # Signal callbacks:
 
     def __destroyed(self, item):
         for handler in self.__screen_handlers:
             self.__screen.disconnect(handler)
-        for handler in self.__appitem_config_handlers:
-            self.__appitem_config.disconnect(handler)
         if self.__class_group is not None:
             for handler in self.__class_group_handlers:
                 self.__class_group.disconnect(handler)
@@ -105,9 +96,6 @@ class AppItem(AWindowsItem):
             self.__class_group = None
             if self.__app is None or not self.__pinned:
                 self.destroy()
-
-    def __themed_icons_changed(self, appitem_config):
-        self.changed("icon")
 
     def __showing_desktop_changed(self, screen):
         self.changed("is-visible")
@@ -208,22 +196,9 @@ class AppItem(AWindowsItem):
     
     def get_icons(self):
         if self.__app is not None and self.__app.icons:
-            icons = self.__app.icons
+            icons = list(self.__app.icons)
         else:
             icons = []
-        if self.__appitem_config.themed_icons:
-            icon_names = set()
-            for window_item in self.visible_window_items:
-                app = window_item.window.get_application()
-                if app is None or app.get_icon_is_fallback():
-                    continue
-                icon_names.add(app.get_icon_name())
-            if self.__class_group is not None:
-                icon_names = list(icon_names) + [
-                    self.__class_group.get_name().lower(),
-                    self.__class_group.get_res_class().lower()
-                ]
-            icons += [ThemedIcon(icon_name) for icon_name in icon_names]
         for window_item in self.visible_window_items:
             app = window_item.window.get_application()
             if app is None or app.get_icon_is_fallback():
