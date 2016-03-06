@@ -269,6 +269,13 @@ class AppItem(AWindowsItem):
     def is_arrow_blinking(self):
         return self.__starting
 
+    def spring_open(self, time=0L):
+        if self.__app is not None and not self.visible_window_items:
+            self.run()
+            return False
+        else:
+            return AWindowsItem.spring_open(self, time)
+
 
     # AWindowsItem implementation:
 

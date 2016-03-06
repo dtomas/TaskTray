@@ -9,6 +9,7 @@ from traylib.winitem_config import WinItemConfig
 
 from tasktray import TaskTray
 from tasktray.app import AppError
+from tasktray.appitem import AppItem
 from tasktray.rox_app import ROXApp
 from tasktray.desktop_app import DesktopApp
 
@@ -77,5 +78,20 @@ class TaskTrayMain(Main):
             )
 
         Main.options_changed(self)
+
+    def item_from_uri(self, uri):
+        path = rox.get_local_path(uri)
+        if not path:
+            return None
+        app = self.get_app_by_path(path)
+        if app is None:
+            return None
+        return AppItem(
+            win_config=self.win_config,
+            screen=self.__screen,
+            get_app_by_name=self.get_app_by_name,
+            app=app,
+            pinned=True,
+        )
 
     win_config = property(lambda self : self.__win_config)
