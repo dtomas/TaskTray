@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskTray 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-29 10:52+CET\n"
+"POT-Creation-Date: 2016-03-06 10:05+CET\n"
 "PO-Revision-Date: 2007-04-02 10:18+0200\n"
 "Last-Translator: Dennis Tomas <den.t@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,27 +16,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tasktray/appitem.py:169
+#: tasktray/app_search.py:69
+msgid "Find applications"
+msgstr ""
+
+#: tasktray/appitem.py:156
 msgid "Pin to TaskTray"
 msgstr "An TaskTray anheften"
 
-#: tasktray/appitem.py:182
+#: tasktray/appitem.py:169
 msgid "Remove from TaskTray"
 msgstr "Von TaskTray lösen"
 
-#: tasktray/main_item.py:67
+#: tasktray/main_item.py:66
 msgid "Click to show windows.\n"
 msgstr "Klicken, um die Fenster anzuzeigen.\n"
 
-#: tasktray/main_item.py:69
+#: tasktray/main_item.py:68
 msgid "Click to show the desktop.\n"
 msgstr "Klicken, um den Arbeitsplatz anzuzeigen.\n"
 
-#: tasktray/main_item.py:71
+#: tasktray/main_item.py:70
 msgid "Scroll down to only show windows of this workspace."
 msgstr "Abwärts rollen, um nur Fenster dieser Arbeitsfläche anzuzeigen."
 
-#: tasktray/main_item.py:73
+#: tasktray/main_item.py:72
 msgid "Scroll up to show windows of all workspaces."
 msgstr "Aufwärts rollen, um Fenster aller Arbeitsflächen anzuzeigen."
 
@@ -49,8 +53,8 @@ msgid "Show all workspaces"
 msgstr "Alle Arbeitsflächen anzeigen"
 
 #: tipsH:3 tipsV:3
-msgid "Show arrow for applications with more than one open window"
-msgstr "Pfeil anzeigen für Programme mit mehr als einem offenen Fenster"
+msgid "Show arrow for applications with open windows"
+msgstr "Pfeil anzeigen für Programme mit offenen Fenstern"
 
 #: tipsH:4 tipsV:4
 msgid "Separators"
@@ -85,10 +89,6 @@ msgid "Appearance"
 msgstr "Aussehen"
 
 #: tipsH:14 tipsV:14
-msgid "Use themed icons if possible"
-msgstr "Wenn möglich, Symbole aus dem aktuellen Symbolthema verwenden"
-
-#: tipsH:15 tipsV:15
 msgid "Enable visual effects"
 msgstr "Visuelle Effekte aktivieren"
 
@@ -99,6 +99,9 @@ msgstr "Oben"
 #: tipsV:6 tipsV:9
 msgid "Bottom"
 msgstr "Unten"
+
+#~ msgid "Use themed icons if possible"
+#~ msgstr "Wenn möglich, Symbole aus dem aktuellen Symbolthema verwenden"
 
 #~ msgid "Right click will open the TaskTray menu."
 #~ msgstr "Rechtsklick öffnet das TaskTray-Menü."

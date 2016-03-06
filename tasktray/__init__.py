@@ -36,6 +36,7 @@ class TaskTray(ManagedTray):
                 win_config=win_config,
                 screen=screen,
                 get_app_by_path=get_app_by_path,
+                get_app_by_name=get_app_by_name,
             ),
         )
 

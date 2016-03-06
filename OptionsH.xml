@@ -3,7 +3,7 @@
   <section>
     <frame label='Behaviour'>
       <toggle name='all_workspaces' label='Show all workspaces'/>
-      <toggle name='arrow' label='Show arrow for applications with more than one open window'/>
+      <toggle name='arrow' label='Show arrow for applications with open windows'/>
     </frame>
     <hbox>
       <frame label='Separators'>

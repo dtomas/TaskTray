@@ -10,11 +10,12 @@ from tasktray.appitem import AppItem
 class TaskTrayMainItem(MainItem):
 
     def __init__(self, tray, tray_config, icon_config, win_config,
-                 screen, get_app_by_path):
+                 screen, get_app_by_path, get_app_by_name):
         MainItem.__init__(self, tray, tray_config, icon_config)
         self.__screen = screen
         self.__win_config = win_config
         self.__get_app_by_path = get_app_by_path
+        self.__get_app_by_name = get_app_by_name
         self.__screen_signal_handlers = [
             screen.connect(
                 "showing-desktop-changed", self.__showing_desktop_changed
@@ -84,7 +85,8 @@ class TaskTrayMainItem(MainItem):
             if app is None:
                 continue
             has_item = False
-            for item in self.tray.items:
+            box = self.tray.get_box("appitems")
+            for item in box.items:
                 if item.app is not None and item.app.path == app.path:
                     has_item = True
                     break
@@ -93,6 +95,7 @@ class TaskTrayMainItem(MainItem):
             appitem = AppItem(
                 self.__win_config,
                 self.__screen,
+                self.__get_app_by_name,
                 class_group=None,
                 app=app,
                 pinned=True,
