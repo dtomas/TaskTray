@@ -67,13 +67,13 @@ class AppItem(AWindowsItem):
                 props_to_emit.add("is-arrow-blinking")
         AWindowsItem._changed(self, props, props_to_emit)
 
-    def offer_window(self, window):
-        class_group = window.get_class_group()
+    def offer_window_item(self, window_item):
+        class_group = window_item.window.get_class_group()
         if class_group is None:
             return False
         if (self.__class_group is not None and
                 self.__class_group is class_group):
-            self.add_window(window)
+            self.add_window_item(window_item)
             return True
         if self.__app is None:
             return False
@@ -81,12 +81,8 @@ class AppItem(AWindowsItem):
         my_app_id = normalize_app_id(self.__app.id)
         for app_id in app_ids:
             if my_app_id == normalize_app_id(app_id):
-                self.add_window(window)
+                self.add_window_item(window_item)
                 return True
-        #for app_id in app_ids:
-        #    if (app_id.lower().startswith(my_app_id) or my_app_id.startswith(app_id.lower())):
-        #        self.add_window(window)
-        #        return True
         return False
 
     def __class_group_closed(self, screen, class_group):

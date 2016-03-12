@@ -3,6 +3,7 @@ import json
 
 from rox.basedir import xdg_config_home
 from traylib.item_box import ItemBox
+from traylib.winitem import create_window_item
 
 from tasktray.appitem import AppItem
 from tasktray.app import AppError
@@ -33,8 +34,9 @@ def manage_appitems(tray, screen, icon_config, win_config, get_app_by_path,
             json.dump(pinned_items, f)
 
     def window_opened(screen, window):
+        window_item = create_window_item(window, win_config)
         for item in state.box.items:
-            if item.offer_window(window):
+            if item.offer_window_item(window_item):
                 return
         if window.get_class_group() is None:
             return
@@ -44,7 +46,7 @@ def manage_appitems(tray, screen, icon_config, win_config, get_app_by_path,
         )
         appitem.connect("pinned", save_pinned_items)
         appitem.connect("unpinned", save_pinned_items)
-        appitem.add_window(window)
+        appitem.add_window_item(window_item)
         state.box.add_item(appitem)
 
     def manage():
