@@ -1,16 +1,14 @@
 import os
-import re
 from urllib import pathname2url
 
 import gobject
 import gtk
 
-import rox
-from rox import processes, filer
+from rox import filer
 
 from traylib import TARGET_URI_LIST
 from traylib.winitem import AWindowsItem
-from traylib.icons import ThemedIcon, PixbufIcon
+from traylib.icons import PixbufIcon
 
 from tasktray.app import normalize_app_id
 

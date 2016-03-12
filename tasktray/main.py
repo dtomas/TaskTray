@@ -1,9 +1,6 @@
-from functools import partial
-
 import rox
 from rox.options import Option
 
-from traylib import ICON_THEME
 from traylib.main import Main
 from traylib.winitem_config import WinItemConfig
 

@@ -2,7 +2,7 @@ import os
 import subprocess
 
 import rox
-from rox import AppInfo, filer
+from rox import AppInfo
 
 from traylib import APPDIRPATH
 from traylib.icons import FileIcon

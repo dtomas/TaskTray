@@ -3,7 +3,6 @@ from rox import get_local_path
 from traylib.main_item import MainItem
 from traylib.icons import ThemedIcon
 
-from tasktray.app import AppError
 from tasktray.appitem import AppItem
 
 
