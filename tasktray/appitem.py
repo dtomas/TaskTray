@@ -220,11 +220,6 @@ class AppItem(AWindowsItem):
             return 1.0
         return AWindowsItem.get_zoom(self)
 
-    def get_name(self):
-        if not self.visible_window_items:
-            return self.get_base_name()
-        return AWindowsItem.get_name(self)
-
     def get_drag_source_targets(self):
         if self.__app is None:
             return AWindowsItem.get_drag_source_targets(self)
