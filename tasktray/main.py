@@ -76,7 +76,9 @@ class TaskTrayMain(Main):
 
         Main.options_changed(self)
 
-    def item_from_uri(self, uri):
+    def item_from_uri(self, item_box, uri):
+        if item_box.id != "appitems":
+            return
         path = rox.get_local_path(uri)
         if not path:
             return None
