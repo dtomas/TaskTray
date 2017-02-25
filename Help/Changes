@@ -2,6 +2,13 @@
 			Shows open windows
 			by Dennis Tomas
 
+2.0.0 (unreleased)
+~~~~~
+Pinning app icons to the tray.
+Guess .desktop file and use its actions and icon.
+Grey out windows on different workspaces.
+Now using TrayLib 2.0.0. See TrayLib/Help/Changes.
+
 0.7.5 (unreleased)
 ~~~~~
 Make sure icons are removed when their last window closes.

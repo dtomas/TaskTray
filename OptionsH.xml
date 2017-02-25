@@ -3,7 +3,7 @@
   <section>
     <frame label='Behaviour'>
       <toggle name='all_workspaces' label='Show all workspaces'/>
-      <toggle name='arrow' label='Show arrow for applications with more than one open window'/>
+      <toggle name='arrow' label='Show arrow for applications with open windows'/>
     </frame>
     <hbox>
       <frame label='Separators'>
@@ -18,10 +18,10 @@
       </frame>
     </hbox>
     <frame label='Size'>
+      <numentry name='icon_size_min' label='Minimum icon size:' min='16' max='96' step='8'/>
       <numentry name='icon_size_max' label='Maximum icon size:' min='16' max='96' step='8'/>
     </frame>
     <frame label='Appearance'>
-      <toggle name='themed_icons' label='Use themed icons if possible'/>
       <toggle name='effects' label='Enable visual effects'/>
     </frame>
   </section>

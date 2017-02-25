@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-03-27 18:25+CET\n"
+"POT-Creation-Date: 2016-03-06 10:05+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,6 +14,36 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
+
+#: tasktray/app_search.py:69
+msgid "Find applications"
+msgstr ""
+
+#: tasktray/appitem.py:156
+msgid "Pin to TaskTray"
+msgstr ""
+
+#: tasktray/appitem.py:169
+msgid "Remove from TaskTray"
+msgstr ""
+
+#: tasktray/main_item.py:66
+msgid ""
+"Click to show windows.\n"
+msgstr ""
+
+#: tasktray/main_item.py:68
+msgid ""
+"Click to show the desktop.\n"
+msgstr ""
+
+#: tasktray/main_item.py:70
+msgid "Scroll down to only show windows of this workspace."
+msgstr ""
+
+#: tasktray/main_item.py:72
+msgid "Scroll up to show windows of all workspaces."
+msgstr ""
 
 #: tipsH:1 tipsV:1
 msgid "Behaviour"
@@ -24,7 +54,7 @@ msgid "Show all workspaces"
 msgstr ""
 
 #: tipsH:3 tipsV:3
-msgid "Show arrow for applications with more than one open window"
+msgid "Show arrow for applications with open windows"
 msgstr ""
 
 #: tipsH:4 tipsV:4
@@ -48,15 +78,15 @@ msgid "Size"
 msgstr ""
 
 #: tipsH:11 tipsV:11
-msgid "Maximum icon size:"
+msgid "Minimum icon size:"
 msgstr ""
 
 #: tipsH:12 tipsV:12
-msgid "Appearance"
+msgid "Maximum icon size:"
 msgstr ""
 
 #: tipsH:13 tipsV:13
-msgid "Use themed icons if possible"
+msgid "Appearance"
 msgstr ""
 
 #: tipsH:14 tipsV:14
