@@ -2,7 +2,7 @@
 			Shows open windows
 			by Dennis Tomas
 
-2.0.0 (unreleased)
+2.0.0
 ~~~~~
 Pinning app icons to the tray.
 Guess .desktop file and use its actions and icon.
