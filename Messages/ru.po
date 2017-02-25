@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TaskTray 0.6\n"
-"POT-Creation-Date: 2016-03-06 10:05+CET\n"
-"PO-Revision-Date: 2007-07-02 20:04+EEST\n"
+"POT-Creation-Date: 2017-02-25 20:45+CET\n"
+"PO-Revision-Date: 2007-04-07 20:04+EEST\n"
 "Last-Translator: Konstantin Korikov <lostclus@ua.fm>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -16,31 +16,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 
-#: tasktray/app_search.py:69
-msgid "Find applications"
-msgstr ""
-
-#: tasktray/appitem.py:156
+#: tasktray/appitem.py:150
 msgid "Pin to TaskTray"
 msgstr ""
 
-#: tasktray/appitem.py:169
+#: tasktray/appitem.py:163
 msgid "Remove from TaskTray"
 msgstr ""
 
-#: tasktray/main_item.py:66
+#: tasktray/main_item.py:65
 msgid "Click to show windows.\n"
 msgstr ""
 
-#: tasktray/main_item.py:68
+#: tasktray/main_item.py:67
 msgid "Click to show the desktop.\n"
 msgstr ""
 
-#: tasktray/main_item.py:70
+#: tasktray/main_item.py:69
 msgid "Scroll down to only show windows of this workspace."
 msgstr ""
 
-#: tasktray/main_item.py:72
+#: tasktray/main_item.py:71
 msgid "Scroll up to show windows of all workspaces."
 msgstr ""
 
@@ -53,7 +49,6 @@ msgid "Show all workspaces"
 msgstr "Показывать все рабочие места"
 
 #: tipsH:3 tipsV:3
-#, fuzzy
 msgid "Show arrow for applications with open windows"
 msgstr "Отображать стрелку для приложений с множеством открытых окон"
 
@@ -100,12 +95,3 @@ msgstr "Вверху"
 #: tipsV:6 tipsV:9
 msgid "Bottom"
 msgstr "Внизу"
-
-#~ msgid "Left and right"
-#~ msgstr "Слева и справа"
-
-#~ msgid "Show arrow for main menu"
-#~ msgstr "Отображать стрелку для главного меню"
-
-#~ msgid "Top and bottom"
-#~ msgstr "Вверху и внизу"

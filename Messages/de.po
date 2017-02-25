@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaskTray 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-06 10:05+CET\n"
-"PO-Revision-Date: 2007-04-02 10:18+0200\n"
+"POT-Creation-Date: 2017-02-25 20:45+CET\n"
+"PO-Revision-Date: 2017-02-25 20:46+0200\n"
 "Last-Translator: Dennis Tomas <den.t@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -16,31 +16,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tasktray/app_search.py:69
-msgid "Find applications"
-msgstr ""
-
-#: tasktray/appitem.py:156
+#: tasktray/appitem.py:150
 msgid "Pin to TaskTray"
 msgstr "An TaskTray anheften"
 
-#: tasktray/appitem.py:169
+#: tasktray/appitem.py:163
 msgid "Remove from TaskTray"
 msgstr "Von TaskTray lösen"
 
-#: tasktray/main_item.py:66
+#: tasktray/main_item.py:65
 msgid "Click to show windows.\n"
 msgstr "Klicken, um die Fenster anzuzeigen.\n"
 
-#: tasktray/main_item.py:68
+#: tasktray/main_item.py:67
 msgid "Click to show the desktop.\n"
 msgstr "Klicken, um den Arbeitsplatz anzuzeigen.\n"
 
-#: tasktray/main_item.py:70
+#: tasktray/main_item.py:69
 msgid "Scroll down to only show windows of this workspace."
 msgstr "Abwärts rollen, um nur Fenster dieser Arbeitsfläche anzuzeigen."
 
-#: tasktray/main_item.py:72
+#: tasktray/main_item.py:71
 msgid "Scroll up to show windows of all workspaces."
 msgstr "Aufwärts rollen, um Fenster aller Arbeitsflächen anzuzeigen."
 
@@ -99,21 +95,3 @@ msgstr "Oben"
 #: tipsV:6 tipsV:9
 msgid "Bottom"
 msgstr "Unten"
-
-#~ msgid "Use themed icons if possible"
-#~ msgstr "Wenn möglich, Symbole aus dem aktuellen Symbolthema verwenden"
-
-#~ msgid "Right click will open the TaskTray menu."
-#~ msgstr "Rechtsklick öffnet das TaskTray-Menü."
-
-#~ msgid "Left and right"
-#~ msgstr "Links und rechts"
-
-#~ msgid "Show arrow for main menu"
-#~ msgstr "Pfeil für Hauptmenü anzeigen"
-
-#~ msgid "Icons"
-#~ msgstr "Symbole"
-
-#~ msgid "Top and bottom"
-#~ msgstr "Oben und unten"

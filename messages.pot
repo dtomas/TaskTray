@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-03-06 10:05+CET\n"
+"POT-Creation-Date: 2017-02-25 20:45+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,29 +19,29 @@ msgstr ""
 msgid "Find applications"
 msgstr ""
 
-#: tasktray/appitem.py:156
+#: tasktray/appitem.py:150
 msgid "Pin to TaskTray"
 msgstr ""
 
-#: tasktray/appitem.py:169
+#: tasktray/appitem.py:163
 msgid "Remove from TaskTray"
 msgstr ""
 
-#: tasktray/main_item.py:66
+#: tasktray/main_item.py:65
 msgid ""
 "Click to show windows.\n"
 msgstr ""
 
-#: tasktray/main_item.py:68
+#: tasktray/main_item.py:67
 msgid ""
 "Click to show the desktop.\n"
 msgstr ""
 
-#: tasktray/main_item.py:70
+#: tasktray/main_item.py:69
 msgid "Scroll down to only show windows of this workspace."
 msgstr ""
 
-#: tasktray/main_item.py:72
+#: tasktray/main_item.py:71
 msgid "Scroll up to show windows of all workspaces."
 msgstr ""
 
