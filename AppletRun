@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 PROJECT = "TaskTray"
 SITE = "dtomas"
@@ -7,7 +7,7 @@ import sys, os
 sys.path.append(os.path.dirname(__file__))
 sys.path.append(os.path.join(os.path.dirname(__file__), 'TrayLib'))
 sys.path.append(
-    os.path.join(os.path.dirname(__file__), 'rox-lib', 'ROX-Lib2', 'python')
+    os.path.join(os.path.dirname(__file__), 'rox-lib', 'ROX-Lib3', 'python')
 )
 
 import rox

@@ -22,9 +22,7 @@ class AppError(Exception):
     pass
 
 
-class IApp(object):
-    __metaclass__ = abc.ABCMeta
-
+class IApp(object, metaclass=abc.ABCMeta):
     @abc.abstractproperty
     def description(self):
         """A one-line description of the app, localized if possible."""

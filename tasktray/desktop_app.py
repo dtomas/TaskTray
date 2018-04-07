@@ -1,7 +1,7 @@
 import os
 import locale
 import subprocess
-from ConfigParser import RawConfigParser, NoOptionError, Error
+from configparser import RawConfigParser, NoOptionError, Error
 
 from rox import get_local_path
 from rox.basedir import xdg_data_dirs

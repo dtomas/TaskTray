@@ -1,3 +1,5 @@
+from gi.repository import Wnck
+
 import rox
 from rox.options import Option
 
@@ -10,18 +12,13 @@ from tasktray.appitem import AppItem
 from tasktray.rox_app import ROXApp
 from tasktray.desktop_app import DesktopApp
 
-import wnck
-
 
 class TaskTrayMain(Main):
     
     def __init__(self, app_factories=[ROXApp, DesktopApp]):
         Main.__init__(self, "TaskTray")
-        try:
-            wnck.set_client_type(wnck.CLIENT_TYPE_PAGER)
-        except:
-            pass
-        self.__screen = wnck.screen_get_default()
+        Wnck.set_client_type(Wnck.ClientType.PAGER)
+        self.__screen = Wnck.Screen.get_default()
         self.__screen.force_update()
         self.__app_factories = app_factories
 

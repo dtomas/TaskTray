@@ -1,8 +1,7 @@
 import os
-from urllib import pathname2url
+from urllib.request import pathname2url
 
-import gobject
-import gtk
+from gi.repository import GObject, Gtk, Gdk
 
 from rox import filer
 
@@ -124,11 +123,11 @@ class AppItem(AWindowsItem):
 
         #if menu is None:
         #    return None
-        #menu.append(gtk.SeparatorMenuItem())
+        #menu.append(Gtk.SeparatorMenuItem())
 
         #def run(item):
         #    self.app.run()
-        #item = gtk.ImageMenuItem(gtk.STOCK_EXECUTE)
+        #item = Gtk.ImageMenuItem(Gtk.STOCK_EXECUTE)
         #item.connect("activate", run)
         #menu.append(item)
         return menu
@@ -138,18 +137,18 @@ class AppItem(AWindowsItem):
         if self.__app is None:
             return menu
         if menu is None:
-            menu = gtk.Menu()
+            menu = Gtk.Menu()
         else:
-            menu.prepend(gtk.SeparatorMenuItem())
-            menu.prepend(gtk.SeparatorMenuItem())
+            menu.prepend(Gtk.SeparatorMenuItem())
+            menu.prepend(Gtk.SeparatorMenuItem())
         if not self.__pinned:
             def pin(item):
                 self.__pinned = True
                 self.changed("is-visible")
                 self.emit("pinned")
-            item = gtk.ImageMenuItem(_("Pin to TaskTray"))
-            item.get_image().set_from_stock(
-                gtk.STOCK_ADD, gtk.ICON_SIZE_MENU
+            item = Gtk.ImageMenuItem(_("Pin to TaskTray"))
+            item.set_image(
+                Gtk.Image.new_from_stock(Gtk.STOCK_ADD, Gtk.IconSize.MENU)
             )
             item.connect("activate", pin)
             menu.prepend(item)
@@ -160,30 +159,32 @@ class AppItem(AWindowsItem):
                 self.emit("unpinned")
                 if self.__class_group is None:
                     self.destroy()
-            item = gtk.ImageMenuItem(_("Remove from TaskTray"))
-            item.get_image().set_from_stock(
-                gtk.STOCK_REMOVE, gtk.ICON_SIZE_MENU
+            item = Gtk.ImageMenuItem(_("Remove from TaskTray"))
+            item.set_image(
+                Gtk.Image.new_from_stock(Gtk.STOCK_REMOVE, Gtk.IconSize.MENU)
             )
             item.connect("activate", unpin)
             menu.prepend(item)
         if self.__app.help_dir or self.__app.actions:
-            menu.prepend(gtk.SeparatorMenuItem())
+            menu.prepend(Gtk.SeparatorMenuItem())
         if self.__app.help_dir is not None:
-            item = gtk.ImageMenuItem(gtk.STOCK_HELP)
+            item = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_HELP, None)
             menu.prepend(item)
             item.connect("activate", self.__show_help)
         for option in self.__app.actions:
-            item = gtk.ImageMenuItem(option.label)
+            item = Gtk.ImageMenuItem(option.label)
             item.connect("activate", self.__exec_option, option)
             stock_id = option.stock_icon
             if stock_id:
-                item.get_image().set_from_stock(stock_id, gtk.ICON_SIZE_MENU)
+                item.set_image(
+                    Gtk.Image.new_from_stock(stock_id, Gtk.IconSize.MENU)
+                )
             menu.prepend(item)
-        menu.prepend(gtk.SeparatorMenuItem())
+        menu.prepend(Gtk.SeparatorMenuItem())
 
         def run(item):
             self.run()
-        item = gtk.ImageMenuItem(gtk.STOCK_EXECUTE)
+        item = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_EXECUTE, None)
         item.connect("activate", run)
         menu.prepend(item)
         return menu
@@ -224,7 +225,7 @@ class AppItem(AWindowsItem):
         if self.__app is None:
             return AWindowsItem.get_drag_source_targets(self)
         return AWindowsItem.get_drag_source_targets(self) + [
-            ("text/uri-list", 0, TARGET_URI_LIST)
+            Gtk.TargetEntry.new("text/uri-list", 0, TARGET_URI_LIST)
         ]
 
     def get_drag_source_actions(self):
@@ -232,7 +233,7 @@ class AppItem(AWindowsItem):
             return AWindowsItem.get_drag_source_actions(self)
         return (
             AWindowsItem.get_drag_source_actions(self) |
-            gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_LINK
+            Gdk.DragAction.COPY | Gdk.DragAction.LINK
         )
 
     def drag_data_get(self, context, data, info, time):
@@ -241,7 +242,7 @@ class AppItem(AWindowsItem):
             if self.__app is not None:
                 data.set_uris(['file://%s' % pathname2url(self.__app.path)])
 
-    def click(self, time=0L):
+    def click(self, time=0):
         visible_window_items = self.visible_window_items
         if len(visible_window_items) == 0 and self.__app is not None:
             self.run()
@@ -258,7 +259,7 @@ class AppItem(AWindowsItem):
     def is_arrow_blinking(self):
         return self.__starting
 
-    def spring_open(self, time=0L):
+    def spring_open(self, time=0):
         if self.__app is not None and not self.visible_window_items:
             self.run()
             return False
@@ -299,9 +300,9 @@ class AppItem(AWindowsItem):
         return self.__pinned
 
 
-gobject.signal_new(
-    "pinned", AppItem, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()
+GObject.signal_new(
+    "pinned", AppItem, GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()
 )
-gobject.signal_new(
-    "unpinned", AppItem, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ()
+GObject.signal_new(
+    "unpinned", AppItem, GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()
 )
