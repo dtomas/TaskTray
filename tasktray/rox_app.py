@@ -17,8 +17,7 @@ class ROXApp(IApp):
             raise AppError("Not an app dir: %s" % app_dir)
         self.__path = app_dir
         help_dir = os.path.join(app_dir, 'Help')
-        if os.path.isdir(help_dir):
-            self.__help_dir = help_dir
+        self.__help_dir = help_dir if os.path.isdir(help_dir) else None
         self.__name = os.path.basename(app_dir)
         self.__app_run = os.path.join(app_dir, 'AppRun')
         self.__dir_icon = os.path.join(app_dir, '.DirIcon')
