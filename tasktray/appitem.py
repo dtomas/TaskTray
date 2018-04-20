@@ -144,10 +144,7 @@ class AppItem(AWindowsItem):
                 self.__pinned = True
                 self.changed("is-visible")
                 self.emit("pinned")
-            item = Gtk.ImageMenuItem(_("Pin to TaskTray"))
-            item.set_image(
-                Gtk.Image.new_from_stock(Gtk.STOCK_ADD, Gtk.IconSize.MENU)
-            )
+            item = Gtk.MenuItem.new_with_label(_("Pin to TaskTray"))
             item.connect("activate", pin)
             menu.prepend(item)
         else:
@@ -157,32 +154,30 @@ class AppItem(AWindowsItem):
                 self.emit("unpinned")
                 if self.__class_group is None:
                     self.destroy()
-            item = Gtk.ImageMenuItem(_("Remove from TaskTray"))
-            item.set_image(
-                Gtk.Image.new_from_stock(Gtk.STOCK_REMOVE, Gtk.IconSize.MENU)
-            )
+            item = Gtk.MenuItem.new_with_label(_("Remove from TaskTray"))
             item.connect("activate", unpin)
             menu.prepend(item)
         if self.__app.help_dir or self.__app.actions:
             menu.prepend(Gtk.SeparatorMenuItem())
         if self.__app.help_dir is not None:
-            item = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_HELP, None)
+            item = Gtk.MenuItem.new_with_label(_("Help"))
             menu.prepend(item)
             item.connect("activate", self.__show_help)
         for option in self.__app.actions:
-            item = Gtk.ImageMenuItem(option.label)
+            item = Gtk.MenuItem.new_with_label(option.label)
             item.connect("activate", self.__exec_option, option)
-            stock_id = option.stock_icon
-            if stock_id:
-                item.set_image(
-                    Gtk.Image.new_from_stock(stock_id, Gtk.IconSize.MENU)
-                )
+            # TODO: Add icon.
+            # stock_id = option.stock_icon
+            # if stock_id:
+            #     item.set_image(
+            #         Gtk.Image.new_from_stock(stock_id, Gtk.IconSize.MENU)
+            #     )
             menu.prepend(item)
         menu.prepend(Gtk.SeparatorMenuItem())
 
         def run(item):
             self.run()
-        item = Gtk.ImageMenuItem.new_from_stock(Gtk.STOCK_EXECUTE, None)
+        item = Gtk.MenuItem.new_with_label(_("Run"))
         item.connect("activate", run)
         menu.prepend(item)
         return menu
