@@ -16,7 +16,7 @@ class AppAction(object):
 
     def execute(self):
         subprocess.Popen(self.command)
-        
+
 
 class AppError(Exception):
     pass

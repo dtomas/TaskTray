@@ -77,14 +77,15 @@ class ROXApp(IApp):
     @staticmethod
     def from_name(appname):
         appnames = [appname, appname.capitalize(), appname.upper()]
-        for path in APPDIRPATH:
-            if not path or not os.path.isdir(path):
-                continue
-            for filename in os.listdir(path):
-                if filename.lower() == appname.lower():
-                    app_dir = os.path.join(path, filename)
-                    try:
-                        return ROXApp(app_dir)
-                    except AppError:
-                        pass
+        for appname in appnames:
+            for path in APPDIRPATH:
+                if not path or not os.path.isdir(path):
+                    continue
+                for filename in os.listdir(path):
+                    if filename.lower() == appname.lower():
+                        app_dir = os.path.join(path, filename)
+                        try:
+                            return ROXApp(app_dir)
+                        except AppError:
+                            pass
         return None

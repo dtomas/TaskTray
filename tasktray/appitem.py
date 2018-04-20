@@ -44,7 +44,6 @@ class AppItem(AWindowsItem):
 
         self.connect("destroyed", self.__destroyed)
 
-
     # Signal callbacks:
 
     def __destroyed(self, item):
@@ -99,7 +98,6 @@ class AppItem(AWindowsItem):
     def __exec_option(self, menu_item, option):
         option.execute()
 
-
     # Private methods:
 
     def __iter_app_ids_from_class_group(self, class_group):
@@ -108,7 +106,7 @@ class AppItem(AWindowsItem):
             name = class_group.get_name()
         parts = name.split('-')
         for i in range(len(parts), 0, -1):
-            name = '-'.join(parts[0 : i]) 
+            name = '-'.join(parts[0:i])
             yield name
 
 
@@ -188,7 +186,7 @@ class AppItem(AWindowsItem):
         item.connect("activate", run)
         menu.prepend(item)
         return menu
-    
+
     def get_icons(self):
         if self.__app is not None and self.__app.icons:
             icons = list(self.__app.icons)
@@ -276,14 +274,12 @@ class AppItem(AWindowsItem):
             return self.__app.name
         return None
 
-
     # Public methods:
 
     def run(self, uri_list=()):
         self.__starting = True
         self.changed("is-arrow-blinking")
         self.__app.run(uri_list)
-
 
     # Properties:
 
@@ -301,8 +297,8 @@ class AppItem(AWindowsItem):
 
 
 GObject.signal_new(
-    "pinned", AppItem, GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()
+    "pinned", AppItem, GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, ()
 )
 GObject.signal_new(
-    "unpinned", AppItem, GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()
+    "unpinned", AppItem, GObject.SignalFlags.RUN_FIRST, GObject.TYPE_NONE, ()
 )

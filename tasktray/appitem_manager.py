@@ -6,9 +6,6 @@ from traylib.item_box import ItemBox
 from traylib.winitem import create_window_item
 
 from tasktray.appitem import AppItem
-from tasktray.app import AppError
-from tasktray.rox_app import ROXApp
-from tasktray.desktop_app import DesktopApp
 
 
 def manage_appitems(tray, screen, icon_config, win_config, get_app_by_path,

@@ -14,7 +14,7 @@ from tasktray.desktop_app import DesktopApp
 
 
 class TaskTrayMain(Main):
-    
+
     def __init__(self, app_factories=[ROXApp, DesktopApp]):
         Main.__init__(self, "TaskTray")
         Wnck.set_client_type(Wnck.ClientType.PAGER)
@@ -26,11 +26,11 @@ class TaskTrayMain(Main):
         Main.init_options(self)
         self.__o_all_workspaces = Option("all_workspaces", True)
         self.__o_arrow = Option("arrow", True)
-        
+
     def init_config(self):
         Main.init_config(self)
         self.__win_config = WinItemConfig(
-            all_workspaces=self.__o_all_workspaces.int_value, 
+            all_workspaces=self.__o_all_workspaces.int_value,
             arrow=self.__o_arrow.int_value,
         )
 
@@ -90,4 +90,4 @@ class TaskTrayMain(Main):
             pinned=True,
         )
 
-    win_config = property(lambda self : self.__win_config)
+    win_config = property(lambda self: self.__win_config)

@@ -28,7 +28,6 @@ class TaskTrayMainItem(MainItem):
         ]
         self.connect("destroyed", self.__destroyed)
 
-
     # Signal callbacks
 
     def __destroyed(self, widget):
@@ -39,7 +38,6 @@ class TaskTrayMainItem(MainItem):
 
     def __showing_desktop_changed(self, screen):
         self.changed("icon", "name")
-
 
     # Methods inherited from Item.
 

@@ -1,10 +1,6 @@
 from functools import partial
 
-from rox import tasks
-
-from traylib.tray_config import TrayConfig
 from traylib.managed_tray import ManagedTray
-from traylib.icon import IconConfig
 from traylib.main_box_manager import manage_main_box
 
 from tasktray.appitem_manager import manage_appitems
