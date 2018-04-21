@@ -109,7 +109,6 @@ class AppItem(AWindowsItem):
             name = '-'.join(parts[0:i])
             yield name
 
-
     # Item implementation:
 
     def get_menu_left(self):
@@ -258,7 +257,6 @@ class AppItem(AWindowsItem):
             return False
         else:
             return AWindowsItem.spring_open(self, time)
-
 
     # AWindowsItem implementation:
 
