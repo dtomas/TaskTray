@@ -74,8 +74,12 @@ class ROXApp(IApp):
     def command(self):
         return self.__app_run
 
-    @staticmethod
-    def from_name(appname):
+    @classmethod
+    def from_path(cls, path):
+        return cls(path)
+
+    @classmethod
+    def from_name(cls, appname):
         appnames = [appname, appname.capitalize(), appname.upper()]
         for appname in appnames:
             for path in APPDIRPATH:

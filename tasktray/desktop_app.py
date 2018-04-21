@@ -1,95 +1,41 @@
 import os
-import locale
-import subprocess
-from configparser import RawConfigParser, NoOptionError, Error
+from gi.repository import Gio
 
-from rox import get_local_path
 from rox.basedir import xdg_data_dirs
 
-from traylib.icons import ThemedIcon, FileIcon
+from traylib.icons import GioIcon
 
-from tasktray.app import IApp, AppError, AppAction, normalize_app_id
+from tasktray.app import IApp, normalize_app_id
+
+
+class DesktopAppAction(object):
+
+    def __init__(self, appinfo, action_name):
+        self.action_name = action_name
+        self.label = appinfo.get_action_name(action_name)
+
+    def execute(self):
+        self.appinfo.launch_action(self.action, None)
 
 
 class DesktopApp(IApp):
 
-    def __init__(self, desktop_file):
-        if not os.path.exists(desktop_file):
-            raise AppError("Desktop file %s does not exist." % desktop_file)
-        parser = RawConfigParser()
-        try:
-            parser.read(desktop_file)
-        except Error as e:
-            raise AppError("Error reading file %s: %s" % (desktop_file, e))
-        if not parser.has_section("Desktop Entry"):
-            raise AppError("No desktop entry section in %s." % desktop_file)
-        lang = locale.getdefaultlocale()[0].split('_')[0]
-        try:
-            self.__exec = parser.get("Desktop Entry", "Exec")
-        except NoOptionError:
-            raise AppError("No Exec entry in .desktop file %s." % desktop_file)
-        self.__id = os.path.splitext(os.path.basename(desktop_file))[0]
-        self.__name = self.__id
-        try:
-            self.__name = parser.get("Desktop Entry", "Name[%s]" % lang)
-        except NoOptionError:
-            try:
-                self.__name = parser.get("Desktop Entry", "Name")
-            except NoOptionError:
-                pass
-        try:
-            self.__icon_name = parser.get("Desktop Entry", "Icon")
-        except NoOptionError:
-            self.__icon_name = None
-        self.__path = desktop_file
+    def __init__(self, appinfo):
+        self.appinfo = appinfo
         self.__help_dir = None
         for datadir in xdg_data_dirs:
-            help_dir = os.path.join(datadir, 'doc', self.__id)
+            help_dir = os.path.join(datadir, 'doc', self.id)
             if os.path.isdir(help_dir):
                 self.__help_dir = help_dir
                 break
-        self.__app_options = []
-        for section in parser.sections():
-            if not section.startswith("Desktop Action"):
-                continue
-            try:
-                name = parser.get(section, "Name[%s]" % lang)
-            except NoOptionError:
-                try:
-                    name = parser.get(section, "Name")
-                except NoOptionError:
-                    continue
-            try:
-                exec_ = parser.get(section, "Exec")
-            except NoOptionError:
-                continue
-            if ("%f" in exec_ or
-                    "%F" in exec_ or
-                    "%u" in exec_ or
-                    "%U" in exec_):
-                continue
-            try:
-                icon_name = parser.get(section, "Icon")
-            except NoOptionError:
-                icon_name = None
-            self.__app_options.append(
-                AppAction(name, exec_.split(' '), icon_name)
-            )
-        self.__is_drop_target = (
-            "%f" in self.__exec or
-            "%F" in self.__exec or
-            "%u" in self.__exec or
-            "%U" in self.__exec
-        )
-        self.__is_multi_drop = "%F" in self.__exec or "%U" in self.__exec
-        try:
-            self.__description = parser.get("Desktop Entry", "Comment")
-        except NoOptionError:
-            self.__description = self.__name
+        self.__app_actions = [
+            DesktopAppAction(appinfo, action_name)
+            for action_name in self.appinfo.list_actions()
+        ]
 
     @property
     def description(self):
-        return self.__description
+        return self.appinfo.get_description()
 
     @property
     def help_dir(self):
@@ -97,79 +43,61 @@ class DesktopApp(IApp):
 
     @property
     def path(self):
-        return self.__path
+        return self.appinfo.get_property("filename")
 
     @property
     def name(self):
-        return self.__name
+        return self.appinfo.get_name()
 
     @property
     def id(self):
-        return self.__id
+        app_id = self.appinfo.get_id()
+        if app_id.endswith('.desktop'):
+            app_id = app_id[:-len('.desktop')]
+        return app_id
 
     @property
     def actions(self):
-        return self.__app_options
+        return self.__app_actions
 
     @property
     def icons(self):
-        if os.path.isabs(self.__icon_name):
-            return [FileIcon(self.__icon_name)]
-        else:
-            return [ThemedIcon(self.__icon_name)]
+        icon = self.appinfo.get_icon()
+        return [] if icon is None else [GioIcon(icon)]
 
     @property
     def is_drop_target(self):
-        return self.__is_drop_target
+        return (
+            self.appinfo.supports_files()
+            or self.appinfo.supports_uris()
+        )
 
     @property
     def command(self):
-        return self.__exec
-
-    def run(self, uri_list=[]):
-        if not self.__is_drop_target:
-            subprocess.Popen(self.__exec.split(' '))
-        else:
-            if self.__is_multi_drop:
-                command = []
-                for arg in self.__exec.split(' '):
-                    if arg == "%U":
-                        for uri in uri_list:
-                            command.append(uri)
-                    elif arg == "%F":
-                        for uri in uri_list:
-                            command.append(get_local_path(uri))
-                    else:
-                        command.append(arg)
-                subprocess.Popen(command)
-            else:
-                if not uri_list:
-                    subprocess.Popen([
-                        arg for arg in self.__exec.split(' ')
-                        if arg not in {"%u", "%f"}
-                    ])
-                else:
-                    for uri in uri_list:
-                        command = []
-                        for arg in self.__exec.split(' '):
-                            if arg == "%u":
-                                command.append(uri)
-                            elif arg == "%f":
-                                command.append(get_local_path(uri))
-                            else:
-                                command.append(arg)
-                        subprocess.Popen(command)
-
-    @staticmethod
-    def from_name(appname):
-        appname = normalize_app_id(appname)
-        for datadir in xdg_data_dirs:
-            applications_dir = os.path.join(datadir, "applications")
-            if not os.path.isdir(applications_dir):
-                continue
-            filenames = os.listdir(applications_dir)
-            for leafname in filenames:
-                if (normalize_app_id(os.path.splitext(leafname)[0].lower()) ==
-                        appname):
-                    return DesktopApp(os.path.join(applications_dir, leafname))
         return None
+
+    def run(self, uri_list=None):
+        self.appinfo.launch_uris(uri_list)
+
+    @classmethod
+    def from_path(cls, path):
+        try:
+            appinfo = Gio.DesktopAppInfo.new_from_filename(path)
+        except TypeError:
+            # XXX: Constructor returned NULL.
+            return None
+        if appinfo is None:
+            return None
+        return cls(appinfo)
+
+    @classmethod
+    def from_name(cls, appname):
+        desktop_id = normalize_app_id(appname) + '.desktop'
+        try:
+            appinfo = Gio.DesktopAppInfo.new(desktop_id)
+        except TypeError:
+            # XXX: Constructor returned NULL.
+            return None
+        if appinfo is None:
+            return None
+        return cls(appinfo)

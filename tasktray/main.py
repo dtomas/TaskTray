@@ -41,7 +41,7 @@ class TaskTrayMain(Main):
     def get_app_by_path(self, path):
         for app_factory in self.__app_factories:
             try:
-                return app_factory(path)
+                return app_factory.from_path(path)
             except AppError:
                 pass
         return None
